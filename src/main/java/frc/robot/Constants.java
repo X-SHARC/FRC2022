@@ -52,6 +52,7 @@ public final class Constants {
 	public static final int STORAGE_ID = 0;
 	public static final int SHOOTER_MASTER_ID = 0;
 	public static final int SHOOTER_SLAVE_ID = 0;
+	public static final int CONVEYOR_ID = 0;
 	
 	
 
