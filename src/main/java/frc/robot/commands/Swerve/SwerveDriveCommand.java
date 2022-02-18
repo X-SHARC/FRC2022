@@ -21,7 +21,7 @@ public class SwerveDriveCommand extends CommandBase {
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(0.5);
   private final SlewRateLimiter rotLimiter = new SlewRateLimiter(0.5);
 
-  double scale = 0.6;
+  double scale = 0.4;
   
     /** Creates a new SwerveDriveCommand. */
     public SwerveDriveCommand(Swerve sw, XboxController joystick) {
