@@ -45,6 +45,7 @@ public class SwerveModule {
   // CANCoder & SRXMagEncoder has 4096 ticks/rotation
   private static double kEncoderTicksPerRotation = 4096;
 
+  private String name;
   private Rotation2d offset;
   private TalonFX driveMotor;
   private TalonFX angleMotor;
@@ -53,7 +54,6 @@ public class SwerveModule {
   // DutyCycleEncoder is used for absolute values. Switch to normal Encoder class for relative.
   // Using absolute has the advantage of zeroing the modules autonomously.
   // If using relative, find a way to mechanically zero out wheel headings before starting the robot.
-  double wheelCircumference = 2 * Math.PI * Units.inchesToMeters(2);
   Gearbox driveRatio = new Gearbox(6.86, 1);
   
   private PIDController rotPID = new PIDController(kAngleP, kAngleI, kAngleD);
@@ -63,7 +63,8 @@ public class SwerveModule {
   private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(kDriveS, kDriveV);
   private final SimpleMotorFeedforward rotFeedforward = new SimpleMotorFeedforward(kAngleS, kAngleV);
 
-  public SwerveModule(TalonFX driveMotor, TalonFX angleMotor, DutyCycleEncoder rotEncoder, Rotation2d offset) {
+  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, DutyCycleEncoder rotEncoder, Rotation2d offset) {
+    this.name = name;
     this.driveMotor = driveMotor;
     this.angleMotor = angleMotor;
     this.rotEncoder = rotEncoder;
@@ -78,13 +79,13 @@ public class SwerveModule {
   }
 
   public double getPosition(){
-    return -driveMotor.getSelectedSensorPosition() / 2048.0 * wheelCircumference;
+    return driveMotor.getSelectedSensorPosition() / 2048.0 * Constants.Swerve.wheelCircumference;
   }
 
     // ! added drive ratio, check odometry
   public double getDriveMotorRate(){
     return driveRatio.calculate(
-      ((driveMotor.getSelectedSensorVelocity() * 10) / 2048.0) * wheelCircumference
+      ((driveMotor.getSelectedSensorVelocity() * 10) / 2048.0) * Constants.Swerve.wheelCircumference
     );
   }
 
@@ -129,41 +130,39 @@ public class SwerveModule {
     resetRotationEncoder();
   }
 
+  public void stopMotors(){
+    driveMotor.set(TalonFXControlMode.PercentOutput, 0);
+    angleMotor.set(TalonFXControlMode.PercentOutput, 0);
+  }
+
   // ! NEED TO IMPLEMET THE DRIVEMOTOR PIDF BEFORE COMP
   public void setDesiredState(SwerveModuleState desiredState) {
+    if(Math.abs(desiredState.speedMetersPerSecond)<0.001){
+      stopMotors();
+      return;
+    }
+
     Rotation2d currentRotation = getAngle();
     SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
-    // System.out.println("Desired Angle" + desiredState.angle.getDegrees());
-    // System.out.println("Actual Angle" + getAngle());
     // Find the difference between our current rotational position + our new rotational position
     Rotation2d rotationDelta = state.angle.minus(currentRotation);
-
     double desiredRotation = currentRotation.getDegrees() + rotationDelta.getDegrees();
-
-   
 
     angleMotor.set(TalonFXControlMode.PercentOutput, 
         MathUtil.clamp( 
           ( rotPID.calculate(
                 currentRotation.getDegrees(),
                 desiredRotation 
-                ) 
-                //+ rotFeedforward.calculate(rotPID.getVelocityError())
-                 ), 
+                )), 
             -1.0, 
             1.0)
     );
-    //SmartDashboard.putNumber("setpoint", desiredRotation);
 
     //TODO Implemented PID for drive motors, need tuning and trial
     //https://github.com/wpilibsuite/allwpilib/blob/main/wpilibjExamples/src/main/java/edu/wpi/first/wpilibj/examples/swervebot/SwerveModule.java
     //current setup uses percent mode which should be OK for tele-op
-    double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
-    //+ driveFeedforward.calculate(state.speedMetersPerSecond)
-    //driveMotor.set(TalonFXControlMode.PercentOutput, driveFeedforward.calculate(state.speedMetersPerSecond));
-    driveMotor.set(TalonFXControlMode.PercentOutput, feetPerSecond / Constants.Swerve.kMaxSpeed);
-    SmartDashboard.putNumber("ffoutput", driveFeedforward.calculate(state.speedMetersPerSecond));
-    SmartDashboard.putNumber("speed", getDriveMotorRate());
+
+    driveMotor.set(TalonFXControlMode.PercentOutput, state.speedMetersPerSecond / Constants.Swerve.kMaxSpeed);
   }
 
 }

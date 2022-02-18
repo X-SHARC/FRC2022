@@ -17,9 +17,9 @@ public class SwerveDriveCommand extends CommandBase {
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   // TODO not using them currently, try out and see if you want to keep them for comp
-  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(0.5);
+  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(0.5);
+  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(0.5);
 
   double scale = 0.6;
   
@@ -42,23 +42,20 @@ public class SwerveDriveCommand extends CommandBase {
     scale = Math.abs(joystick.getRightTriggerAxis()) > 0.4 ? 1 : 0.4;
 
     final var xSpeed = xSpeedLimiter.calculate(
-      (Math.abs(joystick.getLeftY()) < 0.1) ? 0 : joystick.getLeftY()
-      * Constants.Swerve.kMaxSpeed * scale );
+      (Math.abs(joystick.getLeftY()) < 0.1) ? 0 : joystick.getLeftY())
+      * Constants.Swerve.kMaxSpeed * scale;
 
     
     final var ySpeed = ySpeedLimiter.calculate(
-      (Math.abs(joystick.getLeftX()) <  0.1) ? 0 : joystick.getLeftX()
-     * Constants.Swerve.kMaxSpeed * scale );
+      (Math.abs(joystick.getLeftX()) <  0.1) ? 0 : joystick.getLeftX())
+      * Constants.Swerve.kMaxSpeed * scale;
      
     final var rot = rotLimiter.calculate(
-      (Math.abs(joystick.getRightX()) < 0.1) ? 0 : joystick.getRightX()
-      * Constants.Swerve.kMaxAngularSpeed * scale ) ;
+      (Math.abs(joystick.getRightX()) < 0.1) ? 0 : joystick.getRightX())
+      * Constants.Swerve.kMaxSpeed * scale;
 
-    if(joystick.getAButton()){
-      fieldOriented = fieldOriented ? false : true;
-    }
+    fieldOriented = !joystick.getAButton();
 
-    //swerveSubsystem.drive(xSpeed * 0.6, ySpeed * 0.6, rot * 0.4, fieldRelative);
     swerveSubsystem.drive(xSpeed, ySpeed, rot, fieldOriented);
 
   }
