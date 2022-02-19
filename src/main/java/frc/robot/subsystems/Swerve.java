@@ -55,10 +55,10 @@ public class Swerve extends SubsystemBase {
   // TODO: Update module offsets to match your CANCoder offsets | Done
 
   private SwerveModule[] modules = new SwerveModule[] {
-    new SwerveModule(new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(143)), //! Front Left
-    new SwerveModule(new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-15)), //! Front Right
-    new SwerveModule(new TalonFX(11), new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(57)), //! Back Left
-    new SwerveModule(new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3)), Rotation2d.fromDegrees(145))  //! Back Right
+    new SwerveModule(new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(-27)), //! Front Left
+    new SwerveModule(new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(0)), //! Front Right
+    new SwerveModule(new TalonFX(11), new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(52)), //! Back Left
+    new SwerveModule(new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3)), Rotation2d.fromDegrees(0))  //! Back Right
   };
 
   public Swerve(boolean isCalibrating) {
