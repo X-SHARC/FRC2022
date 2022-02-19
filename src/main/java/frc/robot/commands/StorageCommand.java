@@ -37,13 +37,27 @@ public class StorageCommand extends CommandBase {
       storage.stop();
     }
 
-
+    if(operator.getYButtonPressed()){
+      storage.storageBackwards();
+      conveyor.retractBall();
+    }
+    if(operator.getYButtonReleased()){
+      storage.stop();
+      conveyor.stop();
+    }
+    if(operator.getBButtonPressed()){
+      conveyor.retractBall();
+    }
+    if(operator.getBButtonReleased()){
+      conveyor.stop();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    conveyor.stop();
+    storage.stop();
   }
 
   // Returns true when the command should end.

@@ -48,13 +48,10 @@ public final class Constants {
 
 
 	//Motor Controller ID's
-	public static final int INTAKE_ID = 0;
-	public static final int STORAGE_ID = 0;
-	public static final int SHOOTER_MASTER_ID = 0;
-	public static final int SHOOTER_SLAVE_ID = 0;
-	public static final int CONVEYOR_ID = 0;
-	
-	
-
-
+	public static final int INTAKE_ID = 9;
+	public static final int STORAGE_ID = 1;
+	public static final int SHOOTER_MASTER_ID = 19;
+	public static final int SHOOTER_SLAVE_ID = 18;
+	public static final int CONVEYOR_ID = 4;
+	public static final int CLIMB_ID = 0;
 }

@@ -24,4 +24,8 @@ public class Intake extends SubsystemBase {
   public void ball_out(){
     intakeMotor.set(ControlMode.PercentOutput, -0.85);
   }
+
+  public void stop(){
+    intakeMotor.set(0.0);
+  }
 }

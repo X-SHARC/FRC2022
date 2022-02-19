@@ -26,6 +26,8 @@ public class Shooter extends SubsystemBase {
   PIDController shooterPID = new PIDController(kP, kI, kD);  
 
   public Shooter() {
+    shooterSlaveMotor.setInverted(true);
+    shooterMasterMotor.setInverted(false);
     shooterSlaveMotor.follow(shooterMasterMotor);
   }
 
@@ -41,6 +43,10 @@ public class Shooter extends SubsystemBase {
     shooterMasterMotor.set(ControlMode.PercentOutput,PIDOutput);
     SmartDashboard.putNumber("Shooter RPM", shooterCurrentRPM);
     SmartDashboard.putNumber("Shooter PIDOutput", PIDOutput);
+  }
+
+  public void shootBall(){
+    shooterMasterMotor.set(ControlMode.PercentOutput, 0.1);
   }
 
   public void stop(){
