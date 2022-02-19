@@ -57,22 +57,27 @@ public class Swerve extends SubsystemBase {
   // TODO: Update module offsets to match your CANCoder offsets | Done
 
   private SwerveModule[] modules = new SwerveModule[] {
-    new SwerveModule(new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(-27)), //! Front Left
-    new SwerveModule(new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-128)), //! Front Right
-    new SwerveModule(driveMotorBL, new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(54)), //! Back Left
-    new SwerveModule(new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3)), Rotation2d.fromDegrees(-103))  //! Back Right
+    new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(-27)), //! Front Left
+    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-1128)), //! Front Right
+    new SwerveModule("RL", driveMotorBL, new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(54)), //! Back Left
+    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3) ), Rotation2d.fromDegrees(-103))  //! Back Right
   };
 
   public Swerve(boolean isCalibrating) {
     driveMotorBL.setInverted(true);
     this.isCalibrating = isCalibrating;
     resetAllEncoders();
-    gyroAhrs.reset();
-    //when setpoint goes back and forth between -0 and 0, the oscillation happens
     
+    new Thread(() -> {
+      try {
+        Thread.sleep(1000);
+        gyroAhrs.reset();
+      } catch (Exception e) {
+        //TODO: handle exception
+      }
+    }).start();
+  
     SmartDashboard.putData("Field", field2D);
-    //initializeAutoPIDs();
-
   }
   
   public Rotation2d getHeading(){
@@ -82,7 +87,6 @@ public class Swerve extends SubsystemBase {
   }
 
   public double getHeadingDouble(){
-    //return gyroAhrs.getAngle();
     return Math.IEEEremainder(gyroAhrs.getAngle(), 360.0) * (Constants.kGyroReversed ? -1.0 : 1.0);
   }
 
@@ -93,7 +97,7 @@ public class Swerve extends SubsystemBase {
   
 
   public void resetAllEncoders(){
-    for (int i = 0; i < modules.length; i++) {
+    for (int i = modules.length; i > 0; i--) {
       SwerveModule module = modules[i];
       //module.resetRotationEncoder();
       module.resetDriveEncoder();
@@ -101,14 +105,12 @@ public class Swerve extends SubsystemBase {
   }
 
   public double getAverageDistance(){
-    /*
     double sum = 0;
-    for (int i = 0; i < modules.length; i++) {
+    for (int i = modules.length; i > 0; i--) {
       SwerveModule module = modules[i];
       sum += module.getPosition();
     }
-    return -sum / 4.0; */
-    return modules[0].getPosition();
+    return sum / modules.length;
   }
 
   public Pose2d getPose(){
