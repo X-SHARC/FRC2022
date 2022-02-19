@@ -51,17 +51,20 @@ public class Swerve extends SubsystemBase {
   //private final CKIMU gyro;
   private AHRS gyroAhrs = new AHRS();
 
+  TalonFX driveMotorBL = new TalonFX(11);
+
   // TODO: Update these CAN device IDs to match your TalonFX + CANCoder device IDs | Done
   // TODO: Update module offsets to match your CANCoder offsets | Done
 
   private SwerveModule[] modules = new SwerveModule[] {
     new SwerveModule(new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(-27)), //! Front Left
-    new SwerveModule(new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(0)), //! Front Right
-    new SwerveModule(new TalonFX(11), new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(52)), //! Back Left
-    new SwerveModule(new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3)), Rotation2d.fromDegrees(0))  //! Back Right
+    new SwerveModule(new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-128)), //! Front Right
+    new SwerveModule(driveMotorBL, new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(54)), //! Back Left
+    new SwerveModule(new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3)), Rotation2d.fromDegrees(-103))  //! Back Right
   };
 
   public Swerve(boolean isCalibrating) {
+    driveMotorBL.setInverted(true);
     this.isCalibrating = isCalibrating;
     resetAllEncoders();
     gyroAhrs.reset();
@@ -69,6 +72,7 @@ public class Swerve extends SubsystemBase {
     
     SmartDashboard.putData("Field", field2D);
     //initializeAutoPIDs();
+
   }
   
   public Rotation2d getHeading(){

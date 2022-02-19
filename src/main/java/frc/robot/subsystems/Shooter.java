@@ -26,8 +26,8 @@ public class Shooter extends SubsystemBase {
   PIDController shooterPID = new PIDController(kP, kI, kD);  
 
   public Shooter() {
-    shooterSlaveMotor.setInverted(true);
-    shooterMasterMotor.setInverted(false);
+    shooterSlaveMotor.setInverted(false);
+    shooterMasterMotor.setInverted(true);
     shooterSlaveMotor.follow(shooterMasterMotor);
   }
 
