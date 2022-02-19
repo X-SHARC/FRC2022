@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -69,7 +70,8 @@ public class SwerveModule {
     this.angleMotor = angleMotor;
     this.rotEncoder = rotEncoder;
     this.offset = offset;
-    
+    this.driveMotor.setNeutralMode(NeutralMode.Brake);
+    this.angleMotor.setNeutralMode(NeutralMode.Brake);
     rotPID.disableContinuousInput();
   }
 
@@ -110,7 +112,6 @@ public class SwerveModule {
     // ? all the values below should be tunable in Glass
     if(rotCalibration){
       SmartDashboard.putData(Name + " Rotation PID", rotPID);     
-      // ? can't tune FeedForward in real time
     }
     if(driveCalibration){
       SmartDashboard.putData(Name + " Drive PID", drivePID);
