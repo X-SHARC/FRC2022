@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Storage;
@@ -13,8 +14,8 @@ public class StorageCommand extends CommandBase {
   /** Creates a new StorageCommand. */
   Storage storage;
   Conveyor conveyor;
-  XboxController operator;
-  public StorageCommand(Storage storage, Conveyor conveyor, XboxController operator) {
+  Joystick operator;
+  public StorageCommand(Storage storage, Conveyor conveyor, Joystick operator) {
     this.storage = storage;
     this.conveyor = conveyor;
     this.operator = operator;
@@ -28,27 +29,27 @@ public class StorageCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(operator.getAButtonPressed()){
+    if(operator.getRawButtonPressed(2)){
       conveyor.feedBall();
       storage.storageForward();
     }
-    if (operator.getAButtonReleased()){
+    if (operator.getRawButtonReleased(2)){
       conveyor.stop();
       storage.stop();
     }
 
-    if(operator.getYButtonPressed()){
+    if(operator.getRawButtonPressed(4)){
       storage.storageBackwards();
       conveyor.retractBall();
     }
-    if(operator.getYButtonReleased()){
+    if(operator.getRawButtonReleased(4)){
       storage.stop();
       conveyor.stop();
     }
-    if(operator.getBButtonPressed()){
+    if(operator.getRawButtonPressed(3)){
       conveyor.retractBall();
     }
-    if(operator.getBButtonReleased()){
+    if(operator.getRawButtonReleased(3)){
       conveyor.stop();
     }
   }

@@ -57,7 +57,7 @@ public class Shooter extends SubsystemBase {
     //2048 signals per revolution
 
     shooterPID.setTolerance(200);
-    PIDOutput = shooterPID.calculate(shooterCurrentRPM, 3000);
+    PIDOutput = shooterPID.calculate(shooterCurrentRPM, RPM);
 
     feedForwardOutput = feedforward.calculate(RPM);
 

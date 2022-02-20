@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -27,7 +28,7 @@ public class RobotContainer {
 
   //Joysticks
   XboxController driver = new XboxController(0);
-  XboxController operator = new XboxController(1);
+  Joystick operator = new Joystick(1);
 
   //Commands
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
@@ -43,16 +44,15 @@ public class RobotContainer {
     swerveDrivetrain.setDefaultCommand(driveCommand);
     storage.setDefaultCommand(storageCommand);
 
-    Button shooterButton = new JoystickButton(operator, 3).whileHeld(new RunCommand(()->shooter.pidShooter(5000), shooter));
+    Button shooterButton = new JoystickButton(operator, 1).whileHeld(new RunCommand(()->shooter.pidShooter(3000), shooter));
     shooterButton.whenReleased(new RunCommand(()-> shooter.stop(), shooter));
 
-    Button intakeButton = new JoystickButton(operator, 5).whileHeld(new RunCommand(()-> intake.take_ball(), intake));
+    Button intakeButton = new JoystickButton(operator, 6).whileHeld(new RunCommand(()-> intake.take_ball(), intake));
     intakeButton.whenReleased(new RunCommand(()-> intake.stop(), intake));
 
-    Button intakeOutButton = new JoystickButton(operator, 6).whileHeld(new RunCommand(()-> intake.take_ball(), intake));
+    Button intakeOutButton = new JoystickButton(operator, 5).whileHeld(new RunCommand(()-> intake.ball_out(), intake));
     intakeOutButton.whenReleased(new RunCommand(()-> intake.stop(), intake));
   }
-
 
 
   public Command getAutonomousCommand() {
