@@ -21,7 +21,7 @@ public class SwerveDriveCommand extends CommandBase {
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(2.5);
   private final SlewRateLimiter rotLimiter = new SlewRateLimiter(2.5);
 
-  double scale = 0.4;
+  double scale = 0.92;
   
     /** Creates a new SwerveDriveCommand. */
     public SwerveDriveCommand(Swerve sw, XboxController joystick) {
@@ -56,7 +56,7 @@ public class SwerveDriveCommand extends CommandBase {
 
     fieldOriented = !joystick.getAButton();
 
-    swerveSubsystem.drive(xSpeed, ySpeed, rot, fieldOriented);
+    swerveSubsystem.drive(-xSpeed, -ySpeed, rot, fieldOriented);
 
   }
   // Called once the command ends or is interrupted.

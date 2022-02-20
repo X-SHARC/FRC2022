@@ -35,7 +35,7 @@ public class RobotContainer {
 
   //Commands
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
-  StorageCommand storageCommand = new StorageCommand(storage, conveyor, operator);
+  StorageCommand storageCommand = new StorageCommand(storage, conveyor, operator, intake);
 
 
   public RobotContainer() {
