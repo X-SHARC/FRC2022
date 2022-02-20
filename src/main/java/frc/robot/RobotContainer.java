@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -18,7 +19,7 @@ import frc.robot.subsystems.Swerve;
 public class RobotContainer {
   //Subsystems
   Swerve swerveDrivetrain = new Swerve(true);
-  Shooter shooter=new Shooter();
+  Shooter shooter = new Shooter();
   Storage storage = new Storage();
   Conveyor conveyor = new Conveyor();
   Climb climb = new Climb();
@@ -46,10 +47,10 @@ public class RobotContainer {
     Button shooterButton = new JoystickButton(operator, 3).whileHeld(new RunCommand(()->shooter.pidShooter(5000), shooter));
     shooterButton.whenReleased(new RunCommand(()-> shooter.stop(), shooter));
 
-    Button intakeButton = new JoystickButton(operator, 5).whileHeld(new RunCommand(()-> intake.take_ball(), intake));
+    Button intakeButton = new JoystickButton(operator, 5).whileHeld(new RunCommand(()-> intake.runForward(), intake));
     intakeButton.whenReleased(new RunCommand(()-> intake.stop(), intake));
 
-    Button intakeOutButton = new JoystickButton(operator, 6).whileHeld(new RunCommand(()-> intake.take_ball(), intake));
+    Button intakeOutButton = new JoystickButton(operator, 6).whileHeld(new RunCommand(()-> intake.runBackwards(), intake));
     intakeOutButton.whenReleased(new RunCommand(()-> intake.stop(), intake));
   }
 

@@ -12,6 +12,7 @@ import frc.robot.Constants;
 
 public class Storage extends SubsystemBase {
   WPI_TalonSRX storageMotor = new WPI_TalonSRX(Constants.STORAGE_ID);
+  
   public Storage() {
     storageMotor.setInverted(true);
   }
