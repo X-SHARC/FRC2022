@@ -52,6 +52,10 @@ public class RobotContainer {
 
     Button intakeOutButton = new JoystickButton(operator, 6).whileHeld(new RunCommand(()-> intake.runBackwards(), intake));
     intakeOutButton.whenReleased(new RunCommand(()-> intake.stop(), intake));
+
+    new JoystickButton(operator, 9).whenPressed(new RunCommand(()-> intake.extendIntake(), intake));
+    new JoystickButton(operator, 10).whenPressed(new RunCommand(()-> intake.retractIntake(), intake));
+    
   }
 
 

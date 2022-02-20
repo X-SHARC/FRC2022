@@ -59,5 +59,5 @@ public final class Constants {
 	public static final int CLIMB_ID = 0;
 
     public static final int INTAKE_SOLENOID_FORWARD_ID = 0;
-    public static final int INTAKE_SOLENOID_REVERSE_ID = 0;
+    public static final int INTAKE_SOLENOID_REVERSE_ID = 1;
 }
