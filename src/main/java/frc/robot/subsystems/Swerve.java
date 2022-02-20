@@ -58,7 +58,7 @@ public class Swerve extends SubsystemBase {
 
   private SwerveModule[] modules = new SwerveModule[] {
     new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(-27)), //! Front Left
-    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-1128)), //! Front Right
+    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-128)), //! Front Right
     new SwerveModule("RL", driveMotorBL, new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(54)), //! Back Left
     new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3) ), Rotation2d.fromDegrees(-103))  //! Back Right
   };
@@ -97,7 +97,7 @@ public class Swerve extends SubsystemBase {
   
 
   public void resetAllEncoders(){
-    for (int i = modules.length; i > 0; i--) {
+    for (int i = modules.length-1; i >= 0; i--) {
       SwerveModule module = modules[i];
       //module.resetRotationEncoder();
       module.resetDriveEncoder();
@@ -106,7 +106,7 @@ public class Swerve extends SubsystemBase {
 
   public double getAverageDistance(){
     double sum = 0;
-    for (int i = modules.length; i > 0; i--) {
+    for (int i = modules.length-1; i >= 0; i--) {
       SwerveModule module = modules[i];
       sum += module.getPosition();
     }

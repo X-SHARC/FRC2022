@@ -43,7 +43,7 @@ public class RobotContainer {
     swerveDrivetrain.setDefaultCommand(driveCommand);
     storage.setDefaultCommand(storageCommand);
 
-    Button shooterButton = new JoystickButton(operator, 2).whileHeld(new RunCommand(()->shooter.pidShooter(5000), shooter));
+    Button shooterButton = new JoystickButton(operator, 3).whileHeld(new RunCommand(()->shooter.pidShooter(5000), shooter));
     shooterButton.whenReleased(new RunCommand(()-> shooter.stop(), shooter));
 
     Button intakeButton = new JoystickButton(operator, 5).whileHeld(new RunCommand(()-> intake.take_ball(), intake));
