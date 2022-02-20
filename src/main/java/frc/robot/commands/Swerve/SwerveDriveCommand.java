@@ -17,9 +17,9 @@ public class SwerveDriveCommand extends CommandBase {
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   // TODO not using them currently, try out and see if you want to keep them for comp
-  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(0.5);
-  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(0.5);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(0.5);
+  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(2.5);
+  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(2.5);
+  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(2.5);
 
   double scale = 0.4;
   
