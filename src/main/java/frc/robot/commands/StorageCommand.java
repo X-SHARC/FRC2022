@@ -9,16 +9,19 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Storage;
 import frc.robot.subsystems.Conveyor;
+import frc.robot.subsystems.Intake;
 
 public class StorageCommand extends CommandBase {
   /** Creates a new StorageCommand. */
   Storage storage;
   Conveyor conveyor;
   Joystick operator;
-  public StorageCommand(Storage storage, Conveyor conveyor, Joystick operator) {
+  Intake intake;
+  public StorageCommand(Storage storage, Conveyor conveyor, Joystick operator, Intake intake) {
     this.storage = storage;
     this.conveyor = conveyor;
     this.operator = operator;
+    this.intake = intake;
     addRequirements(storage, conveyor);
   }
 
@@ -30,11 +33,11 @@ public class StorageCommand extends CommandBase {
   @Override
   public void execute() {
     if(operator.getRawButtonPressed(2)){
-      conveyor.feedBall();
       storage.storageForward();
+      intake.runForward();
     }
     if (operator.getRawButtonReleased(2)){
-      conveyor.stop();
+      intake.stop();
       storage.stop();
     }
 
@@ -44,7 +47,7 @@ public class StorageCommand extends CommandBase {
     }
     if(operator.getRawButtonReleased(4)){
       storage.stop();
-      conveyor.stop();
+      intake.stop();
     }
     if(operator.getRawButtonPressed(3)){
       conveyor.retractBall();

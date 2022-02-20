@@ -61,15 +61,14 @@ public class Shooter extends SubsystemBase {
 
     feedForwardOutput = feedforward.calculate(RPM);
 
-    error = RPM - shooterCurrentRPM;
-    error/=100;
-    output = error * kP/10;
+    error = 2000 - shooterCurrentRPM;
+    //error/=100;
+    output = error * 0.00277;
     shooterMasterMotor.set(ControlMode.PercentOutput,output);
-    //shooterMasterMotor.set(ControlMode.PercentOutput,PIDOutput);
   }
 
   public void shootBall(){
-    shooterMasterMotor.set(ControlMode.PercentOutput, 0.1);
+    shooterMasterMotor.set(ControlMode.PercentOutput, 0.52);
   }
 
   public void stop(){

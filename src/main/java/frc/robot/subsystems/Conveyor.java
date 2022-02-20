@@ -9,8 +9,9 @@ import frc.robot.Constants;
 public class Conveyor extends SubsystemBase {
   /** Creates a new Conveyor. */
   WPI_TalonSRX conveyorMotor = new WPI_TalonSRX(Constants.CONVEYOR_ID);
+  
   public Conveyor() {
-    conveyorMotor.setInverted(true);
+    conveyorMotor.setInverted(false);
   }
 
   public void feedBall(){

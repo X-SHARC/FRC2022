@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -55,5 +56,8 @@ public final class Constants {
 	public static final int SHOOTER_MASTER_ID = 19;
 	public static final int SHOOTER_SLAVE_ID = 18;
 	public static final int CONVEYOR_ID = 4;
-	public static final int CLIMB_ID = 0;
+	public static final int CLIMB_ID = 2;
+
+    public static final int INTAKE_SOLENOID_FORWARD_ID = 0;
+    public static final int INTAKE_SOLENOID_REVERSE_ID = 1;
 }
