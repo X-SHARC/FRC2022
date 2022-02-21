@@ -76,7 +76,7 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    SharcTrajectory traj = new SharcTrajectory(swerveDrivetrain, AutoMode.THREE_BALL);
+    SharcTrajectory traj = new SharcTrajectory(swerveDrivetrain, AutoMode.DEBUGGING);
     return traj.getSwerveController();
   }
 }

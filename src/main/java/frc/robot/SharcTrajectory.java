@@ -27,7 +27,7 @@ public class SharcTrajectory {
     private double theta_kP;
 
     public enum AutoMode {
-        THREE_BALL, FIVE_BALL
+        THREE_BALL, FIVE_BALL, DEBUGGING
     }
     
     public SharcTrajectory(Swerve swerve, AutoMode autoMode) {
@@ -39,8 +39,10 @@ public class SharcTrajectory {
                 trajectory = PathPlanner.loadPath("3Ball", 4, 3.5);
             case FIVE_BALL:
                 trajectory = PathPlanner.loadPath("terminal", 4, 3.5);
+            case DEBUGGING:
+                trajectory = PathPlanner.loadPath("debugging", 4, 3.5);
             default:
-                trajectory = PathPlanner.loadPath("3Ball", 4, 3.5);
+                trajectory = PathPlanner.loadPath("debugging", 4, 3.5);
         }
     }
 
