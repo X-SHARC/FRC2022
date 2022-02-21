@@ -21,7 +21,16 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 public final class Constants {
 
     public static final class Swerve{
-		public static final double wheelCircumference = Math.PI * Units.inchesToMeters(4);
+		public static final double kDriveP = 0.756;
+		public static final double kDriveI = 0.0;
+		public static final double kDriveD = 0.0;
+		public static final double kDriveS = 0.47088;
+		public static final double kDriveV = 2.3799;
+		public static final double kDriveA = 0.43084;
+	  
+		public static final double kAngleP = 0.007;
+
+		public static final double wheelCircumference = 2 * Math.PI * Units.inchesToMeters(2);
 
         public static final double kMaxSpeed = Units.feetToMeters(16.2); // 16.2 feet per second
 		public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second

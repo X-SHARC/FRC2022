@@ -11,6 +11,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -24,7 +25,7 @@ public class Shooter extends SubsystemBase {
   private double kI = 0.0;
   private double kD = 0.0;
 
-  private double kS = 0.11447;
+  private double kS = 0.74791;
   private double kV = 0.11447;
   private double kA = 0.0063222;
 
@@ -36,7 +37,6 @@ public class Shooter extends SubsystemBase {
   
   PIDController shooterPID = new PIDController(kP, kI, kD);  
 
-  int RPM;
   double error;
   double output;
 
@@ -46,24 +46,17 @@ public class Shooter extends SubsystemBase {
     shooterSlaveMotor.follow(shooterMasterMotor);
   }
 
-  public void pidShooter(int RPM){
+  public void setRPM(int RPM){
     double shooterRawSensor = shooterMasterMotor.getSelectedSensorVelocity();
-
-    this.RPM = RPM;
-
-    shooterRawSensor *= 10;
-    shooterRawSensor/=2048;
-    shooterCurrentRPM = shooterRawSensor*60;
+    shooterCurrentRPM = (shooterRawSensor * 10.)/2048. * 60.;
     //2048 signals per revolution
 
-    shooterPID.setTolerance(200);
-    PIDOutput = shooterPID.calculate(shooterCurrentRPM, RPM);
+    shooterPID.setTolerance(100);
+    PIDOutput = shooterPID.calculate(shooterCurrentRPM/60., RPM/60.);
 
-    feedForwardOutput = feedforward.calculate(RPM);
+    feedForwardOutput = feedforward.calculate(RPM/60.);
 
-    error = 2000 - shooterCurrentRPM;
-    //error/=100;
-    output = error * 0.00277;
+    output = (PIDOutput + feedForwardOutput) / RobotController.getBatteryVoltage();
     shooterMasterMotor.set(ControlMode.PercentOutput,output);
   }
 
@@ -81,9 +74,8 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Shooter RPM", shooterCurrentRPM);
     SmartDashboard.putNumber("Shooter FeedForward Output", feedForwardOutput );
-    SmartDashboard.putNumber("Shooter Setpoint", RPM);
     SmartDashboard.putNumber("Shooter PID Output", PIDOutput);
-    SmartDashboard.putNumber("Shooter handmade PID output", output);
+    SmartDashboard.putNumber("Shooter Setpoint", shooterPID.getSetpoint());
 
     
   }
