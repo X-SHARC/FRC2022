@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -47,11 +48,12 @@ public final class Constants {
 				new Translation2d(-kLength / 2, -kWidth / 2)
 			);
 			
-		public static final double maxAccelerationMetersPerSecondSq = 0;
+		
 		public static final double kP_Theta = 0;
-		public static final Constraints kThetaControllerConstraints = null;
-		public static final double kP_YController = 0;
-		public static final double kP_XController = 0;
+ 		// Constraint for the motion profilied robot angle controller
+ 		public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
+ 			new TrapezoidProfile.Constraints(
+	 			kMaxAngularSpeed, kModuleMaxAngularAcceleration);
 	}
 
     public static final boolean kGyroReversed = true;

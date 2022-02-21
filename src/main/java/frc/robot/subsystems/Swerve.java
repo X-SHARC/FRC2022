@@ -146,6 +146,15 @@ public class Swerve extends SubsystemBase {
     modules[3].setDesiredState(desiredStates[3]);
   }
 
+  public void setClosedLoopStates(SwerveModuleState[] desiredStates) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        desiredStates, Constants.Swerve.kMaxSpeed);
+    modules[0].setClosedLoop(desiredStates[0]);
+    modules[1].setClosedLoop(desiredStates[1]);
+    modules[2].setClosedLoop(desiredStates[2]);
+    modules[3].setClosedLoop(desiredStates[3]);
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("groAngle", getHeadingDouble());

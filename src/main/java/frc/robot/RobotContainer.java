@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.SharcTrajectory.AutoMode;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.CollectCargo;
 import frc.robot.commands.StorageCommand;
@@ -75,8 +76,8 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return null;
+    SharcTrajectory traj = new SharcTrajectory(swerveDrivetrain, AutoMode.THREE_BALL);
+    return traj.getSwerveController();
   }
 }
 
