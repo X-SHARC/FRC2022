@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
@@ -13,12 +15,14 @@ import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.CollectCargo;
 import frc.robot.commands.StorageCommand;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
+import frc.robot.lib.drivers.WS2812Driver;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Storage;
 import frc.robot.subsystems.Swerve;
+
 
 
 public class RobotContainer {
@@ -29,6 +33,8 @@ public class RobotContainer {
   Conveyor conveyor = new Conveyor();
   Climb climb = new Climb();
   Intake intake = new Intake();
+
+  WS2812Driver addressableLED = new WS2812Driver(0,15);
 
   Compressor compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
 
@@ -47,6 +53,8 @@ public class RobotContainer {
   public RobotContainer() {
     configureButtonBindings();
     compressor.enableDigital();
+    addressableLED.toggleRGB();
+    
   }
 
 

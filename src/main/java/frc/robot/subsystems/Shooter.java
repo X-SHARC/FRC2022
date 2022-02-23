@@ -35,7 +35,7 @@ public class Shooter extends SubsystemBase {
   private double PIDOutput;
   private double feedForwardOutput;
   
-  PIDController shooterPID = new PIDController(kP, kI, kD);  
+  public PIDController shooterPID = new PIDController(kP, kI, kD);  
 
   double error;
   double output;
@@ -58,6 +58,10 @@ public class Shooter extends SubsystemBase {
 
     output = (PIDOutput + feedForwardOutput) / RobotController.getBatteryVoltage();
     shooterMasterMotor.set(ControlMode.PercentOutput,output);
+  }
+
+  public double getRPM(){
+    return shooterCurrentRPM;
   }
 
   public void shootBall(){

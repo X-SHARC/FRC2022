@@ -164,6 +164,8 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("2. modül", modules[2].getPosition());
     SmartDashboard.putNumber("3. modül", modules[3].getPosition());
     SmartDashboard.putNumber("average Distance", getAverageDistance());
+    SmartDashboard.putNumber("Posex", getPose().getX());
+    SmartDashboard.putNumber("Posey", getPose().getY());
     
     odometry.update(
       getHeading(),
