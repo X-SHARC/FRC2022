@@ -55,7 +55,7 @@ public class RobotContainer {
     storage.setDefaultCommand(storageCommand);
     climb.setDefaultCommand(climberCommand);
 
-    Button shooterButton = new JoystickButton(operator, 1).whileHeld(new RunCommand(()->shooter.shootBall(), shooter));
+    Button shooterButton = new JoystickButton(operator, 1).whileHeld(new RunCommand(()->shooter.setRPM(5000), shooter));
     shooterButton.whenReleased(new RunCommand(()-> shooter.stop(), shooter));
 
     //Button intakeButton = new JoystickButton(operator, 5).whileHeld(new RunCommand(()-> intake.runForward(), intake));
