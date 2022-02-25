@@ -9,6 +9,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -56,11 +57,18 @@ public class Swerve extends SubsystemBase {
   // TODO: Update these CAN device IDs to match your TalonFX + CANCoder device IDs | Done
   // TODO: Update module offsets to match your CANCoder offsets | Done
 
+  private double[] pidValues = {
+    0.06198,
+    0.06198,
+    0.06198,
+    0.06198
+  };
+
   private SwerveModule[] modules = new SwerveModule[] {
-    new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(-27), true ), //! Front Left
-    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-128), true), //! Front Right
-    new SwerveModule("RL", driveMotorBL, new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(54), true), //! Back Left
-    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3) ), Rotation2d.fromDegrees(-103), true)  //! Back Right
+    new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(-27), false, new PIDController(pidValues[0], 0, 0)), //! Front Left
+    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-128), false, new PIDController(pidValues[1], 0, 0)), //! Front Right
+    new SwerveModule("RL", driveMotorBL, new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(54), true, new PIDController(pidValues[2], 0, 0)), //! Back Left
+    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3) ), Rotation2d.fromDegrees(-103), false, new PIDController(pidValues[3], 0, 0))  //! Back Right
   };
 
   public Swerve(boolean isCalibrating) {
@@ -163,9 +171,19 @@ public class Swerve extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("groAngle", getHeadingDouble());
 
-    SmartDashboard.putNumber("0. modül", modules[0].getDriveMotorRate());
+    
     SmartDashboard.putNumber("0. SETPOINT", modules[0].drivePID.getSetpoint());
     SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
+
+    SmartDashboard.putNumber("1. SETPOINT", modules[1].drivePID.getSetpoint());
+    SmartDashboard.putNumber("1. Velocity", modules[1].getDriveMotorRate());
+
+    SmartDashboard.putNumber("2. SETPOINT", modules[2].drivePID.getSetpoint());
+    SmartDashboard.putNumber("2. Velocity", modules[2].getDriveMotorRate());
+
+    SmartDashboard.putNumber("3. SETPOINT", modules[3].drivePID.getSetpoint());
+    SmartDashboard.putNumber("3. Velocity", modules[3].getDriveMotorRate());
+    
     /*
     SmartDashboard.putNumber("1. modül", modules[1].getDriveMotorRate());
     SmartDashboard.putNumber("2. modül", modules[2].getDriveMotorRate());

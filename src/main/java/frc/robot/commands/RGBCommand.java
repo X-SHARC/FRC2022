@@ -5,38 +5,32 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Storage;
+import frc.robot.lib.drivers.WS2812Driver;
 
-public class CollectCargo extends CommandBase {
-  /** Creates a new CollectCargo. */
-  private Intake intake;
-  private Storage storage;
+public class RGBCommand extends CommandBase {
+  /** Creates a new RGBCommand. */
+  private WS2812Driver led;
 
-  public CollectCargo(Intake intake, Storage storage) {
-    this.intake = intake;
-    this.storage = storage;
+  public RGBCommand(WS2812Driver led) {
+    this.led = led;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(led);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    //   intake.extendIntake();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.runForward();
-    storage.storageForward();
+    led.toggleRGB();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //intake.retractIntake();
-    storage.stop();
-    intake.stop();
+    led.turnOff();
   }
 
   // Returns true when the command should end.

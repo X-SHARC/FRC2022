@@ -33,18 +33,18 @@ public class SwerveModule {
   // DutyCycleEncoder is used for absolute values. Switch to normal Encoder class for relative.
   // Using absolute has the advantage of zeroing the modules autonomously.
   // If using relative, find a way to mechanically zero out wheel headings before starting the robot.
-  Gearbox driveRatio = new Gearbox(6.86, 1);
+  Gearbox driveRatio = new Gearbox(6.86, 2);
   
   private PIDController rotPID = new PIDController(Constants.Swerve.kAngleP, 0, 0);
 
-  public PIDController drivePID = new PIDController(0.26198, 0, 0);
+  public PIDController drivePID;
 
-  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.9043, 1.9043, 0.23523);
+  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.6043, 1.6043, 0.23523);
 
   private int resetOffset = 0;
   private boolean driveEncoderInverted;
 
-  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, DutyCycleEncoder rotEncoder, Rotation2d offset, boolean driveEncoderInverted) {
+  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, DutyCycleEncoder rotEncoder, Rotation2d offset, boolean driveEncoderInverted, PIDController drivePID) {
     this.name = name;
     this.driveMotor = driveMotor;
     this.angleMotor = angleMotor;
@@ -53,6 +53,7 @@ public class SwerveModule {
     this.driveMotor.setNeutralMode(NeutralMode.Brake);
     this.angleMotor.setNeutralMode(NeutralMode.Brake);
     this.driveEncoderInverted = driveEncoderInverted;
+    this.drivePID = drivePID;
 
     rotPID.disableContinuousInput();
   }
@@ -134,7 +135,8 @@ public class SwerveModule {
     // Find the difference between our current rotational position + our new rotational position
     Rotation2d rotationDelta = state.angle.minus(currentRotation);
     double desiredRotation = currentRotation.getDegrees() + rotationDelta.getDegrees();
-    
+      // TODO: desiredRotation = (state - currentRotation) + currentRotation
+      // ????
     angleMotor.set(TalonFXControlMode.PercentOutput, 
         MathUtil.clamp( 
           ( rotPID.calculate(
@@ -144,7 +146,10 @@ public class SwerveModule {
             -1.0, 
             1.0)
     );
-    double driveOutput = driveFeedforward.calculate(state.speedMetersPerSecond) + drivePID.calculate(getDriveMotorRate(), state.speedMetersPerSecond);
+     drivePID.calculate(getDriveMotorRate(), state.speedMetersPerSecond);
+    double driveOutput = 
+      driveFeedforward.calculate(state.speedMetersPerSecond)
+      ;
     driveOutput = driveOutput / RobotController.getBatteryVoltage();
     driveMotor.set(TalonFXControlMode.PercentOutput, driveOutput);
     

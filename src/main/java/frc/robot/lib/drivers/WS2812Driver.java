@@ -27,7 +27,6 @@ public class WS2812Driver extends SubsystemBase {
     m_led.setLength(m_ledBuffer.getLength());
 
     //setColor(0, 0, 0);
-    toggleRGB();
     //breathe();
     //showPercentage(0.5);
     //blink(0, 255, 0);
@@ -36,8 +35,6 @@ public class WS2812Driver extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    toggleRGB();
   }
 
   public static void setColor(int r, int g, int b) {
@@ -103,5 +100,19 @@ public class WS2812Driver extends SubsystemBase {
   
   }
 
+  public enum Side { LEFT, RIGHT }
+
+  private double clamp (double n, double min, double max) {
+    return n > max ? max : (n < min ? min : n);
+  } 
+
+  public void lightOneSide(Side side, int hue) {
+    int ledlength = m_ledBuffer.getLength();
+    for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+      int brightness = (int) (255 * clamp((6*i/ledlength) - 3, 0, 1));
+      System.out.println(brightness);
+      m_ledBuffer.setHSV(i, hue, brightness, brightness);
+    }
+  } 
 
 }

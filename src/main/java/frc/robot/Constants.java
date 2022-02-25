@@ -39,6 +39,8 @@ public final class Constants {
 		
 		public static final double kLength = 0.5903;
 		public static final double kWidth = 0.5953;
+		//public static final double kLength = 0.75;
+		//public static final double kWidth = 0.75;
 
 		public static final SwerveDriveKinematics kinematics =
 			new SwerveDriveKinematics(
@@ -71,4 +73,6 @@ public final class Constants {
 
     public static final int INTAKE_SOLENOID_FORWARD_ID = 0;
     public static final int INTAKE_SOLENOID_REVERSE_ID = 1;
+
+    public static final int SHOOT_RPM = 2500;
 }

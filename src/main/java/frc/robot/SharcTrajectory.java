@@ -36,13 +36,13 @@ public class SharcTrajectory {
         this.auto = autoMode;
         switch (autoMode) {
             case THREE_BALL:
-                trajectory = PathPlanner.loadPath("3Ball", 2, 2);
+                trajectory = PathPlanner.loadPath("ball31", 2, 2);
             case FIVE_BALL:
                 trajectory = PathPlanner.loadPath("terminal", 4, 3.5);
             case DEBUGGING:
                 trajectory = PathPlanner.loadPath("scurve", 2, 2);
             default:
-                trajectory = PathPlanner.loadPath("scurve", 2, 2);
+                trajectory = PathPlanner.loadPath("ekin", 2, 2);
         }
     }
 

@@ -4,39 +4,40 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Storage;
-import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Storage;
 
-public class StorageCommand extends CommandBase {
-  /** Creates a new StorageCommand. */
-  Storage storage;
-  Conveyor conveyor;
-  Intake intake;
-  public StorageCommand(Storage storage, Conveyor conveyor, Intake intake) {
-    this.storage = storage;
-    this.conveyor = conveyor;
+public class CollectCargoCommand extends CommandBase {
+  /** Creates a new CollectCargo. */
+  private Intake intake;
+  private Storage storage;
+
+  public CollectCargoCommand(Intake intake, Storage storage) {
     this.intake = intake;
-    addRequirements(storage, conveyor);
+    this.storage = storage;
+    addRequirements(intake, storage);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    //   intake.extendIntake();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    intake.runForward();
+    storage.storageForward();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    conveyor.stop();
+    //intake.retractIntake();
     storage.stop();
+    intake.stop();
   }
 
   // Returns true when the command should end.
