@@ -37,13 +37,14 @@ public class SwerveModule {
   
   private PIDController rotPID = new PIDController(Constants.Swerve.kAngleP, 0, 0);
 
-  private PIDController drivePID = new PIDController(Constants.Swerve.kDriveP, Constants.Swerve.kDriveI, Constants.Swerve.kDriveD);
+  public PIDController drivePID = new PIDController(0.26198, 0, 0);
 
-  private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(Constants.Swerve.kDriveS, Constants.Swerve.kDriveV, Constants.Swerve.kDriveA);
+  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.9043, 1.9043, 0.23523);
 
   private int resetOffset = 0;
+  private boolean driveEncoderInverted;
 
-  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, DutyCycleEncoder rotEncoder, Rotation2d offset) {
+  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, DutyCycleEncoder rotEncoder, Rotation2d offset, boolean driveEncoderInverted) {
     this.name = name;
     this.driveMotor = driveMotor;
     this.angleMotor = angleMotor;
@@ -51,6 +52,8 @@ public class SwerveModule {
     this.offset = offset;
     this.driveMotor.setNeutralMode(NeutralMode.Brake);
     this.angleMotor.setNeutralMode(NeutralMode.Brake);
+    this.driveEncoderInverted = driveEncoderInverted;
+
     rotPID.disableContinuousInput();
   }
 
@@ -59,6 +62,8 @@ public class SwerveModule {
      360.);
   }
 
+
+
   public double getPosition(){
     return driveMotor.getSelectedSensorPosition() / 2048.0 * Constants.Swerve.wheelCircumference;
   }
@@ -66,8 +71,12 @@ public class SwerveModule {
     // ! added drive ratio, check odometry
   public double getDriveMotorRate(){
     return driveRatio.calculate(
-      ((driveMotor.getSelectedSensorVelocity() * 10) / 2048.0) * Constants.Swerve.wheelCircumference
+      ((getDriveEncoderVelocity() * 10) / 2048.0) * Constants.Swerve.wheelCircumference
     );
+  }
+
+  public double getDriveEncoderVelocity(){
+    return (driveEncoderInverted ? -1 : 1) * driveMotor.getSelectedSensorVelocity();
   }
 
   public SwerveModuleState getState() {
@@ -93,7 +102,7 @@ public class SwerveModule {
       SmartDashboard.putData(Name + " Rotation PID", rotPID);     
     }
     if(driveCalibration){
-      SmartDashboard.putData(Name + " Drive PID", drivePID);
+      //SmartDashboard.putData(Name + " Drive PID", drivePID);
     }
   }
 
@@ -125,7 +134,7 @@ public class SwerveModule {
     // Find the difference between our current rotational position + our new rotational position
     Rotation2d rotationDelta = state.angle.minus(currentRotation);
     double desiredRotation = currentRotation.getDegrees() + rotationDelta.getDegrees();
-
+    
     angleMotor.set(TalonFXControlMode.PercentOutput, 
         MathUtil.clamp( 
           ( rotPID.calculate(
@@ -135,7 +144,6 @@ public class SwerveModule {
             -1.0, 
             1.0)
     );
-
     double driveOutput = driveFeedforward.calculate(state.speedMetersPerSecond) + drivePID.calculate(getDriveMotorRate(), state.speedMetersPerSecond);
     driveOutput = driveOutput / RobotController.getBatteryVoltage();
     driveMotor.set(TalonFXControlMode.PercentOutput, driveOutput);

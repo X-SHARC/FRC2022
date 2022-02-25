@@ -31,7 +31,7 @@ public class RobotContainer {
   Shooter shooter = new Shooter();
   Storage storage = new Storage();
   Conveyor conveyor = new Conveyor();
-  Climb climb = new Climb();
+  //Climb climb = new Climb();
   Intake intake = new Intake();
 
   WS2812Driver addressableLED = new WS2812Driver(0,15);
@@ -47,7 +47,7 @@ public class RobotContainer {
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
   StorageCommand storageCommand = new StorageCommand(storage, conveyor, operator, intake);
   CollectCargo collectCargo = new CollectCargo(intake, storage);
-  ClimberCommand climberCommand = new ClimberCommand(climb, operator);
+  //ClimberCommand climberCommand = new ClimberCommand(climb, operator);
 
 
   public RobotContainer() {
@@ -61,7 +61,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     swerveDrivetrain.setDefaultCommand(driveCommand);
     storage.setDefaultCommand(storageCommand);
-    climb.setDefaultCommand(climberCommand);
+    //climb.setDefaultCommand(climberCommand);
 
     Button shooterButton = new JoystickButton(operator, 1).whileHeld(new RunCommand(()->shooter.setRPM(5000), shooter));
     shooterButton.whenReleased(new RunCommand(()-> shooter.stop(), shooter));
@@ -84,7 +84,7 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    SharcTrajectory traj = new SharcTrajectory(swerveDrivetrain, AutoMode.DEBUGGING);
+    SharcTrajectory traj = new SharcTrajectory(swerveDrivetrain, AutoMode.THREE_BALL);
     return traj.getSwerveController();
   }
 }

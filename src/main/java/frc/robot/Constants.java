@@ -22,12 +22,12 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 public final class Constants {
 
     public static final class Swerve{
-		public static final double kDriveP = 0.756;
+		public static final double kDriveP = 2.432;
 		public static final double kDriveI = 0.0;
 		public static final double kDriveD = 0.0;
-		public static final double kDriveS = 0.47088;
-		public static final double kDriveV = 2.3799;
-		public static final double kDriveA = 0.43084;
+		public static final double kDriveS = 2.3289/10;
+		public static final double kDriveV = 2.3289/10;
+		public static final double kDriveA = 0.31447/10;
 	  
 		public static final double kAngleP = 0.007;
 

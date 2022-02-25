@@ -57,10 +57,10 @@ public class Swerve extends SubsystemBase {
   // TODO: Update module offsets to match your CANCoder offsets | Done
 
   private SwerveModule[] modules = new SwerveModule[] {
-    new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(-27)), //! Front Left
-    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-128)), //! Front Right
-    new SwerveModule("RL", driveMotorBL, new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(54)), //! Back Left
-    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3) ), Rotation2d.fromDegrees(-103))  //! Back Right
+    new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(-27), true ), //! Front Left
+    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-128), true), //! Front Right
+    new SwerveModule("RL", driveMotorBL, new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(54), true), //! Back Left
+    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3) ), Rotation2d.fromDegrees(-103), true)  //! Back Right
   };
 
   public Swerve(boolean isCalibrating) {
@@ -130,11 +130,15 @@ public class Swerve extends SubsystemBase {
           ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getHeading())
           : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.Swerve.kMaxSpeed);
+    setClosedLoopStates(states);
+    /*
     for (int i = 0; i < states.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = states[i];
       module.setDesiredState(state);
     }
+    */
+    
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -159,13 +163,18 @@ public class Swerve extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("groAngle", getHeadingDouble());
 
-    SmartDashboard.putNumber("0. modül", modules[0].getPosition());
-    SmartDashboard.putNumber("1. modül", modules[1].getPosition());
-    SmartDashboard.putNumber("2. modül", modules[2].getPosition());
-    SmartDashboard.putNumber("3. modül", modules[3].getPosition());
+    SmartDashboard.putNumber("0. modül", modules[0].getDriveMotorRate());
+    SmartDashboard.putNumber("0. SETPOINT", modules[0].drivePID.getSetpoint());
+    SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
+    /*
+    SmartDashboard.putNumber("1. modül", modules[1].getDriveMotorRate());
+    SmartDashboard.putNumber("2. modül", modules[2].getDriveMotorRate());
+    SmartDashboard.putNumber("3. modül", modules[3].getDriveMotorRate());
     SmartDashboard.putNumber("average Distance", getAverageDistance());
+    */
     SmartDashboard.putNumber("Posex", getPose().getX());
     SmartDashboard.putNumber("Posey", getPose().getY());
+    SmartDashboard.putNumber("Rot", getPose().getRotation().getDegrees());
     
     odometry.update(
       getHeading(),
