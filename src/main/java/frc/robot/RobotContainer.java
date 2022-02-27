@@ -60,11 +60,17 @@ public class RobotContainer {
   RGBCommand rgbCommand = new RGBCommand(addressableLED);
   ThePoPo arka_sokaklar = new ThePoPo(addressableLED);
 
+  SendableChooser<Command> autonomousChooser = new SendableChooser<>();
+
   public RobotContainer() {
     configureButtonBindings();
     compressor.enableDigital();
     addressableLED.toggleRGB();
-    SmartDashboard.putString("Auto Mode", Constants.DEFAULT_AUTO_MODE);
+
+    autonomousChooser.setDefaultOption("Do nothing", new PrintCommand("Doing nothing."));
+    autonomousChooser.addOption("Three balls", new AutoThreeBalls(swerveDrivetrain, conveyor, shooter, intake, storage));
+    autonomousChooser.addOption("Five balls", new AutoFiveBalls(swerveDrivetrain, conveyor, shooter, intake, storage));
+    SmartDashboard.putData(autonomousChooser);
   }
 
 
@@ -174,7 +180,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
 
-    return SharcTrajectory.getFullThreeBall(swerveDrivetrain, conveyor, shooter, intake, storage);
+    return autonomousChooser.getSelected();
   }
 }
 
