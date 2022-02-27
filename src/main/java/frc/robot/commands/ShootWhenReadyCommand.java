@@ -36,6 +36,7 @@ public class ShootWhenReadyCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
     shooter.setRPM(rpm);
   
     if (shooter.shooterPID.atSetpoint()) {

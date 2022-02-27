@@ -6,14 +6,17 @@ package frc.robot;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.subsystems.Swerve;
 
 /** Add your docs here. */
@@ -21,45 +24,65 @@ public class SharcTrajectory {
 
     private Swerve swerve;
     private Alliance alliance;
-    private AutoMode auto;
-    private PathPlannerTrajectory trajectory;
-    private double kp;
-    private double theta_kP;
+    private Trajectory trajectory;
+    private double kp = 1;
 
-    public enum AutoMode {
-        THREE_BALL, FIVE_BALL, DEBUGGING
+
+    public ProfiledPIDController thetaController = new ProfiledPIDController(Math.PI, 0, 0, Constants.Swerve.kThetaControllerConstraints);
+
+
+    public Trajectory getTrajectory() {
+        return trajectory;
     }
-    
-    public SharcTrajectory(Swerve swerve, AutoMode autoMode) {
+
+    public SharcTrajectory(Swerve swerve, String autoMode) {
         this.swerve = swerve;
         this.alliance = DriverStation.getAlliance();
-        this.auto = autoMode;
         switch (autoMode) {
-            case THREE_BALL:
-                trajectory = PathPlanner.loadPath("ball31", 2, 2);
-            case FIVE_BALL:
+            case "three":
+                trajectory = PathPlanner.loadPath("ball31", 4, 2, false);
+            case "five":
                 trajectory = PathPlanner.loadPath("terminal", 4, 3.5);
-            case DEBUGGING:
+            case "debug":
                 trajectory = PathPlanner.loadPath("scurve", 2, 2);
             default:
-                trajectory = PathPlanner.loadPath("ekin", 2, 2);
+                // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                // TODO: CHANGE THIS TO HAVE A PROPER DEFAULT
+                // XXXXXXXXX VERY IMPORTANT XXXXXXXXXXXXXXXXX
+                trajectory = PathPlanner.loadPath(autoMode, 4, 3);
+            }
         }
-    }
-
-    public Command getSwerveController(){
-        swerve.resetOdometry(trajectory.getInitialPose());
-        ProfiledPIDController thetaController = new ProfiledPIDController(theta_kP, 0, 0, Constants.Swerve.kThetaControllerConstraints);
+        
+    public Command getSwerveController() {
+        var initialPose = trajectory.getInitialPose();
+        swerve.resetOdometry(new Pose2d(initialPose.getTranslation(), ((PathPlannerState) trajectory.getStates().get(0)).holonomicRotation));
+        swerve.addTrajectoryToField2d(trajectory);
+        swerve.resetFieldOrientation(trajectory.getInitialPose().getRotation());
+        
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
-        PPSwerveControllerCommand controller = new PPSwerveControllerCommand(
+        //thetaController.disableContinuousInput();
+        
+        
+        thetaController.reset(swerve.getPose().getRotation().getRadians());
+        PIDController x_pid = new PIDController(kp, 0, 0);
+        PIDController y_pid = new PIDController(kp, 0, 0);
+        
+        
+        SmartDashboard.putData("theta", thetaController);
+        SmartDashboard.putData("x", x_pid);
+        SmartDashboard.putData("y", y_pid);
+        
+        SwerveControllerCommand controller = new SwerveControllerCommand(
             trajectory,
-            swerve::getPose,
+            swerve::getPose, 
             Constants.Swerve.kinematics,
-            new PIDController(kp, 0, 0),
-            new PIDController(kp, 0, 0),
+            x_pid,
+            y_pid,
             thetaController,
             swerve::setClosedLoopStates,
-            swerve);
+            swerve
+        );
 
-        return controller.andThen(() -> swerve.drive(0, 0, 0, false));
+        return controller.andThen(() -> swerve.drive(0, 0, 0, true));
     }
 }

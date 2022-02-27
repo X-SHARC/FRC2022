@@ -1,7 +1,10 @@
 package frc.robot;
 
+import java.lang.invoke.ConstantCallSite;
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -9,10 +12,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.SharcTrajectory.AutoMode;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.CollectCargoCommand;
 import frc.robot.commands.RGBCommand;
@@ -61,7 +64,7 @@ public class RobotContainer {
     configureButtonBindings();
     compressor.enableDigital();
     addressableLED.toggleRGB();
-    
+    SmartDashboard.putString("Auto Mode", Constants.DEFAULT_AUTO_MODE);
   }
 
 
@@ -70,6 +73,11 @@ public class RobotContainer {
     addressableLED.setDefaultCommand(rgbCommand);
     //climb.setDefaultCommand(climberCommand);
 
+    Button resetOdometryButton = new JoystickButton(driver, 7);
+    resetOdometryButton.whenPressed(new InstantCommand(() -> {
+      swerveDrivetrain.resetOdometry(new Pose2d());
+      swerveDrivetrain.resetFieldOrientation();
+    }));
 
 
 
@@ -88,17 +96,31 @@ public class RobotContainer {
         public boolean getAsBoolean() {
           return Math.abs(operator.getRightTriggerAxis()) > 0.4;
         }
+      }),
+      new Button(new BooleanSupplier() {
+        @Override
+        public boolean getAsBoolean() {
+          return Math.abs(driver.getLeftTriggerAxis()) > 0.4;
+        }
+      }),
+      new Button(new BooleanSupplier() {
+        @Override
+        public boolean getAsBoolean() {
+          return Math.abs(driver.getRightTriggerAxis()) > 0.4;
+        }
       })
     };
 
-  triggers[0]
-    .whileHeld(new RunCommand(()-> conveyor.feedBall(), conveyor))
-    .whenReleased(new RunCommand(()-> conveyor.stop(), conveyor));
-  
-  triggers[1]
-    .whileHeld(new RunCommand(() -> conveyor.retractBall(), conveyor))
-    .whenReleased(new RunCommand(()-> conveyor.stop(), conveyor));
-
+    triggers[0]
+      .whileHeld(new RunCommand(()-> conveyor.feedBall(), conveyor))
+      .whenReleased(new RunCommand(()-> conveyor.stop(), conveyor));
+    
+    triggers[1]
+      .whileHeld(new RunCommand(() -> conveyor.retractBall(), conveyor))
+      .whenReleased(new RunCommand(()-> conveyor.stop(), conveyor));
+      
+    triggers[2]
+      .whileHeld(shootWhenReadyCommand);
 
     Button shooterButton =
       new JoystickButton(operator, 1)
@@ -115,14 +137,18 @@ public class RobotContainer {
     
 
     Button[] intakeButtons = {
+      new JoystickButton(driver, 6),
       new JoystickButton(operator, 5),
       new JoystickButton(operator, 6)
     };
 
     intakeButtons[0]
       .whileHeld(collectCargoCommand);
-    
+
     intakeButtons[1]
+      .whileHeld(collectCargoCommand);
+    
+    intakeButtons[2]
       .whileHeld(new RunCommand(()-> intake.runBackwards(), intake))
       .whenReleased(new RunCommand(()-> intake.stop(), intake));
 
@@ -141,13 +167,17 @@ public class RobotContainer {
     Button popoButton = new JoystickButton(operator, 7);
     popoButton.whileHeld(arka_sokaklar);
 
+
     new JoystickButton(operator, 8).whileHeld(new RunCommand(()->addressableLED.turnOff(), addressableLED));
   }
 
 
   public Command getAutonomousCommand() {
-    SharcTrajectory traj = new SharcTrajectory(swerveDrivetrain, AutoMode.THREE_BALL);
-    return traj.getSwerveController();
+
+    String autoCommandName = SmartDashboard.getString("Auto Mode", Constants.DEFAULT_AUTO_MODE);
+    var tr = new SharcTrajectory(swerveDrivetrain, autoCommandName);
+    return tr.getSwerveController()
+    .raceWith(new CollectCargoCommand(intake, storage));
   }
 }
 

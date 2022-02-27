@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,6 +34,8 @@ public class Swerve extends SubsystemBase {
   private boolean offsetCalibration = true;
   private boolean driveCalibration = false;
   private boolean rotCalibration = true;
+
+  private Rotation2d fieldAngle = new Rotation2d();
 
   private final Field2d field2D = new Field2d();
   
@@ -64,11 +67,13 @@ public class Swerve extends SubsystemBase {
     0.06198
   };
 
+
+  final boolean invertAllModules = false;
   private SwerveModule[] modules = new SwerveModule[] {
-    new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(-27), false, new PIDController(pidValues[0], 0, 0)), //! Front Left
-    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-128), false, new PIDController(pidValues[1], 0, 0)), //! Front Right
-    new SwerveModule("RL", driveMotorBL, new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(54), true, new PIDController(pidValues[2], 0, 0)), //! Back Left
-    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3) ), Rotation2d.fromDegrees(-103), false, new PIDController(pidValues[3], 0, 0))  //! Back Right
+    new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(-27), true^invertAllModules, new PIDController(pidValues[0], 0, 0)), //! Front Left
+    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-128), true^invertAllModules, new PIDController(pidValues[1], 0, 0)), //! Front Right
+    new SwerveModule("RL", driveMotorBL, new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(54), false^invertAllModules, new PIDController(pidValues[2], 0, 0)), //! Back Left
+    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3) ), Rotation2d.fromDegrees(-103), true^invertAllModules, new PIDController(pidValues[3], 0, 0))  //! Back Right
   };
 
   public Swerve(boolean isCalibrating) {
@@ -88,19 +93,19 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putData("Field", field2D);
   }
   
-  public Rotation2d getHeading(){
+  public Rotation2d getGyro(){
     return Rotation2d.fromDegrees(
-        getHeadingDouble()    
+        getGyroDouble()
         );
   }
 
-  public double getHeadingDouble(){
+  public double getGyroDouble(){
     return Math.IEEEremainder(gyroAhrs.getAngle(), 360.0) * (Constants.kGyroReversed ? -1.0 : 1.0);
   }
 
   SwerveDriveOdometry odometry = new SwerveDriveOdometry(
     Constants.Swerve.kinematics,
-    getHeading()
+    getGyro()
   );
   
 
@@ -128,25 +133,34 @@ public class Swerve extends SubsystemBase {
   public void resetOdometry(Pose2d pose) {
     odometry.resetPosition(
       pose, 
-      getHeading());
+      getGyro()
+    );
+    // resetAllEncoders();
   }
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     SwerveModuleState[] states =
     Constants.Swerve.kinematics.toSwerveModuleStates(
         fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getHeading())
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyro().minus(fieldAngle))
           : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.Swerve.kMaxSpeed);
     setClosedLoopStates(states);
-    /*
-    for (int i = 0; i < states.length; i++) {
+    
+    /*for (int i = 0; i < states.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = states[i];
       module.setDesiredState(state);
     }
-    */
+*/
     
+  }
+
+  public void resetFieldOrientation() {
+    resetFieldOrientation(getGyro());
+  }
+  public void resetFieldOrientation(Rotation2d angle) {
+    this.fieldAngle = angle;
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -159,6 +173,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public void setClosedLoopStates(SwerveModuleState[] desiredStates) {
+
     SwerveDriveKinematics.desaturateWheelSpeeds(
         desiredStates, Constants.Swerve.kMaxSpeed);
     modules[0].setClosedLoop(desiredStates[0]);
@@ -169,20 +184,21 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("groAngle", getHeadingDouble());
+    SmartDashboard.putNumber("groAngle", getGyroDouble());
+    SmartDashboard.putNumber("field offset", fieldAngle.getDegrees());
 
     
-    SmartDashboard.putNumber("0. SETPOINT", modules[0].drivePID.getSetpoint());
-    SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
+    // SmartDashboard.putNumber("0. SETPOINT", modules[0].drivePID.getSetpoint());
+    // SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
 
-    SmartDashboard.putNumber("1. SETPOINT", modules[1].drivePID.getSetpoint());
-    SmartDashboard.putNumber("1. Velocity", modules[1].getDriveMotorRate());
+    // SmartDashboard.putNumber("1. SETPOINT", modules[1].drivePID.getSetpoint());
+    // SmartDashboard.putNumber("1. Velocity", modules[1].getDriveMotorRate());
 
-    SmartDashboard.putNumber("2. SETPOINT", modules[2].drivePID.getSetpoint());
-    SmartDashboard.putNumber("2. Velocity", modules[2].getDriveMotorRate());
+    // SmartDashboard.putNumber("2. SETPOINT", modules[2].drivePID.getSetpoint());
+    // SmartDashboard.putNumber("2. Velocity", modules[2].getDriveMotorRate());
 
-    SmartDashboard.putNumber("3. SETPOINT", modules[3].drivePID.getSetpoint());
-    SmartDashboard.putNumber("3. Velocity", modules[3].getDriveMotorRate());
+    // SmartDashboard.putNumber("3. SETPOINT", modules[3].drivePID.getSetpoint());
+    // SmartDashboard.putNumber("3. Velocity", modules[3].getDriveMotorRate());
     
     /*
     SmartDashboard.putNumber("1. modül", modules[1].getDriveMotorRate());
@@ -192,14 +208,25 @@ public class Swerve extends SubsystemBase {
     */
     SmartDashboard.putNumber("Posex", getPose().getX());
     SmartDashboard.putNumber("Posey", getPose().getY());
-    SmartDashboard.putNumber("Rot", getPose().getRotation().getDegrees());
-    
+    SmartDashboard.putNumber("Rot", getPose().getRotation().getRadians());
+
+    SwerveModuleState[] moduleStates = {
+      modules[0].getState(),
+      modules[1].getState(),
+      modules[2].getState(),
+      modules[3].getState()
+    };
+    // moduleStates[0].speedMetersPerSecond = Math.abs(modules[0].getDriveEncoderVelocity());
+    // moduleStates[1].speedMetersPerSecond = Math.abs(modules[1].getDriveEncoderVelocity());
+    // moduleStates[2].speedMetersPerSecond = Math.abs(modules[2].getDriveEncoderVelocity());
+    // moduleStates[3].speedMetersPerSecond = Math.abs(modules[3].getDriveEncoderVelocity());
+
     odometry.update(
-      getHeading(),
-      modules[0].getState(), 
-      modules[1].getState(), 
-      modules[2].getState(), 
-      modules[3].getState() 
+      getGyro(),
+      moduleStates[0],
+      moduleStates[1],
+      moduleStates[2],
+      moduleStates[3]
       );
       
 
@@ -214,5 +241,9 @@ public class Swerve extends SubsystemBase {
 
   }
 
+
+  public void addTrajectoryToField2d(Trajectory traj) {
+    field2D.getObject("traj").setTrajectory(traj);
+  }
 
 }

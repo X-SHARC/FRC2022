@@ -95,15 +95,15 @@ public class SwerveModule {
 
   public void calibrate(String Name, boolean offsetCalibration, boolean driveCalibration, boolean rotCalibration){
     if(offsetCalibration){
-      SmartDashboard.putNumber(Name + " Rot Encoder Value", getAngle().getDegrees());
-      SmartDashboard.putNumber(Name + " PID Setpoint", rotPID.getSetpoint());
+      // SmartDashboard.putNumber(Name + " Rot Encoder Value", getAngle().getDegrees());
+      // SmartDashboard.putNumber(Name + " PID Setpoint", rotPID.getSetpoint());
     }
     // ? all the values below should be tunable in Glass
     if(rotCalibration){
-      SmartDashboard.putData(Name + " Rotation PID", rotPID);     
+      // SmartDashboard.putData(Name + " Rotation PID", rotPID);     
     }
     if(driveCalibration){
-      //SmartDashboard.putData(Name + " Drive PID", drivePID);
+      // SmartDashboard.putData(Name + " Drive PID", drivePID);
     }
   }
 
@@ -148,7 +148,7 @@ public class SwerveModule {
     );
      drivePID.calculate(getDriveMotorRate(), state.speedMetersPerSecond);
     double driveOutput = 
-      driveFeedforward.calculate(state.speedMetersPerSecond)
+      -driveFeedforward.calculate(state.speedMetersPerSecond)
       ;
     driveOutput = driveOutput / RobotController.getBatteryVoltage();
     driveMotor.set(TalonFXControlMode.PercentOutput, driveOutput);

@@ -109,10 +109,18 @@ public class WS2812Driver extends SubsystemBase {
   public void lightOneSide(Side side, int hue) {
     int ledlength = m_ledBuffer.getLength();
     for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-      int brightness = (int) (255 * clamp((6*i/ledlength) - 3, 0, 1));
+      double temp;
+      if (side == Side.RIGHT) {
+        temp = (6*i/ledlength) - 1;
+      } else {
+        temp = (-6*i/ledlength) + 3;
+      }
+      int brightness = (int) (255 * clamp(temp, 0, 1));
       System.out.println(brightness);
       m_ledBuffer.setHSV(i, hue, brightness, brightness);
     }
+    m_led.setData(m_ledBuffer);
+
   } 
 
 }

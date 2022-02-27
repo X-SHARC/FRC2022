@@ -22,18 +22,21 @@ public class ThePoPo extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new RunCommand(() -> led.lightOneSide(Side.LEFT, 135), led).withTimeout(1),
-      new RunCommand(() -> led.turnOff(), led).withTimeout(1),
-      new RunCommand(() -> led.lightOneSide(Side.LEFT, 135), led).withTimeout(1),
-      new RunCommand(() -> led.lightOneSide(Side.LEFT, 145), led).withTimeout(1),
-      new RunCommand(() -> led.turnOff(), led).withTimeout(1),
-      new RunCommand(() -> led.lightOneSide(Side.LEFT, 145), led).withTimeout(1)
-    );
+        new RunCommand(() -> led.lightOneSide(Side.LEFT, 0), led).withTimeout(0.03),
+        new RunCommand(() -> led.turnOff(), led).withTimeout(0.03),
+        new RunCommand(() -> led.lightOneSide(Side.LEFT, 0), led).withTimeout(0.03),
+        new RunCommand(() -> led.turnOff(), led).withTimeout(0.03),
+        new RunCommand(() -> led.lightOneSide(Side.LEFT, 0), led).withTimeout(0.03),
+        new RunCommand(() -> led.lightOneSide(Side.RIGHT, 130), led).withTimeout(0.03),
+        new RunCommand(() -> led.turnOff(), led).withTimeout(0.03),
+        new RunCommand(() -> led.lightOneSide(Side.RIGHT, 130), led).withTimeout(0.03),
+        new RunCommand(() -> led.turnOff(), led).withTimeout(0.03),
+        new RunCommand(() -> led.lightOneSide(Side.RIGHT, 130), led).withTimeout(0.03));
   }
 
   @Override
   public void end(boolean interrupted) {
-      super.end(interrupted);
-      led.turnOff();
+    super.end(interrupted);
+    led.turnOff();
   }
 }

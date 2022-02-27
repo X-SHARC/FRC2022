@@ -31,7 +31,7 @@ public class TurnToAgnle extends CommandBase {
   public void execute() {
     // ! NOT FIELD RELATIVE
     swerve.drive(0, 0, 
-    turnPID.calculate(swerve.getHeadingDouble(), angleSetpoint) * Constants.Swerve.kMaxAngularSpeed
+    turnPID.calculate(swerve.getGyroDouble(), angleSetpoint) * Constants.Swerve.kMaxAngularSpeed
     , false);
   }
 

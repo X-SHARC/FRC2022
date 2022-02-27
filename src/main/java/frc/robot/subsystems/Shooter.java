@@ -77,9 +77,9 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Shooter RPM", shooterCurrentRPM);
-    //SmartDashboard.putNumber("Shooter FeedForward Output", feedForwardOutput );
-    SmartDashboard.putNumber("Shooter PID Output", output);
-    SmartDashboard.putNumber("Shooter Setpoint", shooterPID.getSetpoint());
+    // SmartDashboard.putNumber("Shooter FeedForward Output", feedForwardOutput );
+    // SmartDashboard.putNumber("Shooter PID Output", output);
+    // SmartDashboard.putNumber("Shooter Setpoint", shooterPID.getSetpoint());
 
     
   }

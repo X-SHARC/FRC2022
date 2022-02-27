@@ -7,6 +7,7 @@ package frc.robot.commands.Swerve;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
@@ -57,11 +58,12 @@ public class SwerveDriveCommand extends CommandBase {
      
     final var rot = rotLimiter.calculate(
       (Math.abs(joystick.getRightX()) < 0.1) ? 0 : joystick.getRightX())
-      * Constants.Swerve.kMaxSpeed * scale;
+      * Constants.Swerve.kMaxSpeed * -scale;
 
-    fieldOriented = !joystick.getAButton();
 
-    swerveSubsystem.drive(-xSpeed, -ySpeed, rot, fieldOriented);
+    double[] speeds ={xSpeed, ySpeed, rot}; 
+    SmartDashboard.putNumberArray("controller speeds", speeds);
+    swerveSubsystem.drive(xSpeed, ySpeed, rot, fieldOriented);
 
   }
   // Called once the command ends or is interrupted.

@@ -34,8 +34,8 @@ public final class Constants {
 		public static final double wheelCircumference = 2 * Math.PI * Units.inchesToMeters(2);
 
         public static final double kMaxSpeed = Units.feetToMeters(16.2); // 16.2 feet per second
-		public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
-		public static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
+		public static final double kMaxAngularSpeed = Math.PI/2; // 1/2 rotation per second
+		public static final double kModuleMaxAngularAcceleration = 2 * Math.PI/2; // radians per second squared
 		
 		public static final double kLength = 0.5903;
 		public static final double kWidth = 0.5953;
@@ -51,7 +51,6 @@ public final class Constants {
 			);
 			
 		
-		public static final double kP_Theta = 0;
  		// Constraint for the motion profilied robot angle controller
  		public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
  			new TrapezoidProfile.Constraints(
@@ -74,5 +73,13 @@ public final class Constants {
     public static final int INTAKE_SOLENOID_FORWARD_ID = 0;
     public static final int INTAKE_SOLENOID_REVERSE_ID = 1;
 
+
+
+
     public static final int SHOOT_RPM = 2500;
+
+
+
+
+	public static final String DEFAULT_AUTO_MODE = "three2";
 }
