@@ -116,7 +116,6 @@ public class WS2812Driver extends SubsystemBase {
         temp = (-6*i/ledlength) + 3;
       }
       int brightness = (int) (255 * clamp(temp, 0, 1));
-      System.out.println(brightness);
       m_ledBuffer.setHSV(i, hue, brightness, brightness);
     }
     m_led.setData(m_ledBuffer);

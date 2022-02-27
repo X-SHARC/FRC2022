@@ -15,6 +15,7 @@ public class ShootWhenReadyCommand extends CommandBase {
   private Conveyor conveyor;
   private Shooter shooter;
   private int rpm;
+  private int iteration = 0;
 
   /** Creates a new ShootWhenReadyCommand. */
   public ShootWhenReadyCommand(Conveyor conveyor, Shooter shooter) {
@@ -28,6 +29,7 @@ public class ShootWhenReadyCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+  
     conveyor.stop();
     shooter.setRPM(rpm);
     this.rpm = (int) SmartDashboard.getNumber("target shooter RPM", Constants.SHOOT_RPM);
@@ -37,12 +39,17 @@ public class ShootWhenReadyCommand extends CommandBase {
   @Override
   public void execute() {
     
+    
     shooter.setRPM(rpm);
-  
+    
     if (shooter.shooterPID.atSetpoint()) {
-      conveyor.feedBall();
+      iteration++;
+      if(iteration>5){
+        conveyor.feedBall();
+      }
     } else {
       conveyor.stop();
+      iteration = 0;
     }
   }
 

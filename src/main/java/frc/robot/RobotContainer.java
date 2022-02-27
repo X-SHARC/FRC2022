@@ -70,7 +70,7 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     swerveDrivetrain.setDefaultCommand(driveCommand);
-    addressableLED.setDefaultCommand(rgbCommand);
+    addressableLED.setDefaultCommand(arka_sokaklar);
     //climb.setDefaultCommand(climberCommand);
 
     Button resetOdometryButton = new JoystickButton(driver, 7);
@@ -174,10 +174,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
 
-    String autoCommandName = SmartDashboard.getString("Auto Mode", Constants.DEFAULT_AUTO_MODE);
-    var tr = new SharcTrajectory(swerveDrivetrain, autoCommandName);
-    return tr.getSwerveController()
-    .raceWith(new CollectCargoCommand(intake, storage));
+    return SharcTrajectory.getFullThreeBall(swerveDrivetrain, conveyor, shooter, intake, storage);
   }
 }
 

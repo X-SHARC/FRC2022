@@ -76,7 +76,7 @@ public final class Constants {
 
 
 
-    public static final int SHOOT_RPM = 2500;
+    public static final int SHOOT_RPM = 2600;
 
 
 
