@@ -68,17 +68,12 @@ public final class Constants {
 	public static final int SHOOTER_MASTER_ID = 19;
 	public static final int SHOOTER_SLAVE_ID = 18;
 	public static final int CONVEYOR_ID = 4;
-	public static final int CLIMB_ID = 2;
+	public static final int CLIMB_ID = 2; //ID gir
 
     public static final int INTAKE_SOLENOID_FORWARD_ID = 0;
     public static final int INTAKE_SOLENOID_REVERSE_ID = 1;
 
-
-
-
     public static final int SHOOT_RPM = 2600;
-
-
 
 
 	public static final String DEFAULT_AUTO_MODE = "three2";

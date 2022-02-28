@@ -39,7 +39,7 @@ public class RobotContainer {
   Shooter shooter = new Shooter();
   Storage storage = new Storage();
   Conveyor conveyor = new Conveyor();
-  //Climb climb = new Climb();
+  Climb climb = new Climb();
   Intake intake = new Intake();
 
   WS2812Driver addressableLED = new WS2812Driver(0,15);
@@ -56,7 +56,7 @@ public class RobotContainer {
   StorageCommand storageCommand = new StorageCommand(storage, conveyor, intake);
   CollectCargoCommand collectCargoCommand = new CollectCargoCommand(intake, storage);
   ShootWhenReadyCommand shootWhenReadyCommand = new ShootWhenReadyCommand(conveyor, shooter);
-  //ClimberCommand climberCommand = new ClimberCommand(climb, operator);
+  ClimberCommand climberCommand = new ClimberCommand(climb, operator);
   RGBCommand rgbCommand = new RGBCommand(addressableLED);
   ThePoPo arka_sokaklar = new ThePoPo(addressableLED);
 
@@ -71,7 +71,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     swerveDrivetrain.setDefaultCommand(driveCommand);
     addressableLED.setDefaultCommand(arka_sokaklar);
-    //climb.setDefaultCommand(climberCommand);
+    climb.setDefaultCommand(climberCommand);
 
     Button resetOdometryButton = new JoystickButton(driver, 7);
     resetOdometryButton.whenPressed(new InstantCommand(() -> {
@@ -88,13 +88,13 @@ public class RobotContainer {
       new Button(new BooleanSupplier() {
         @Override
         public boolean getAsBoolean() {
-          return Math.abs(operator.getLeftTriggerAxis()) > 0.4;
+          return Math.abs(operator.getRightTriggerAxis()) > 0.4;
         }
       }),
       new Button(new BooleanSupplier() {
         @Override
         public boolean getAsBoolean() {
-          return Math.abs(operator.getRightTriggerAxis()) > 0.4;
+          return Math.abs(operator.getLeftTriggerAxis()) > 0.4;
         }
       }),
       new Button(new BooleanSupplier() {
@@ -123,11 +123,11 @@ public class RobotContainer {
       .whileHeld(shootWhenReadyCommand);
 
     Button shooterButton =
-      new JoystickButton(operator, 1)
-      .whileHeld(new RunCommand(()->shooter.setRPM(2500), shooter))
+      new JoystickButton(operator, 3)
+      .whileHeld(new RunCommand(()->shooter.setRPM(2700), shooter))
       .whenReleased(new RunCommand(()-> shooter.stop(), shooter));
 
-    Button autoShootButton = new JoystickButton(operator, 2)
+    Button autoShootButton = new JoystickButton(operator, 4)
       .whileHeld(shootWhenReadyCommand);
 
     Button[] joystickPressed = {
@@ -138,8 +138,8 @@ public class RobotContainer {
 
     Button[] intakeButtons = {
       new JoystickButton(driver, 6),
-      new JoystickButton(operator, 5),
-      new JoystickButton(operator, 6)
+      new JoystickButton(operator, 6),
+      new JoystickButton(operator, 5)
     };
 
     intakeButtons[0]
@@ -154,8 +154,8 @@ public class RobotContainer {
 
 
       Button[] intakeExtensionButtons = {
-        new JoystickButton(operator, 3),
-        new JoystickButton(operator, 4)
+        new JoystickButton(operator, 10),
+        new JoystickButton(operator, 9)
       };
 
       intakeExtensionButtons[0]

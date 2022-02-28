@@ -4,15 +4,15 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climb;
 
 public class ClimberCommand extends CommandBase {
   /** Creates a new ClimberCommand. */
   Climb climb;
-  Joystick operator;
-  public ClimberCommand(Climb climb, Joystick operator) {
+  XboxController operator;
+  public ClimberCommand(Climb climb, XboxController operator) {
     this.climb = climb;
     this.operator = operator;
     addRequirements(climb);
@@ -40,7 +40,10 @@ public class ClimberCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    climb.stop();
+  }
+
 
   // Returns true when the command should end.
   @Override
