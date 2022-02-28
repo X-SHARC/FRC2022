@@ -5,6 +5,7 @@
 package frc.robot.commands.Auto;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.CollectCargoCommand;
 import frc.robot.commands.ShootWhenReadyCommand;
 import frc.robot.subsystems.Conveyor;
@@ -13,6 +14,8 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Storage;
 import frc.robot.subsystems.Swerve;
 import static edu.wpi.first.wpilibj2.command.CommandGroupBase.*;
+
+import java.util.Arrays;
 
 public class AutoThreeBalls extends AutonomousCommand {
 
@@ -24,7 +27,7 @@ public class AutoThreeBalls extends AutonomousCommand {
     Intake intake,
     Storage storage
   ) {
-    super(Arrays.copyOfRange<Trajectory>(AutonomousCommand.allTrajectories, 0, 3), swerve, conveyor, shooter, intake, storage);
+    super((Arrays.copyOfRange(AutonomousCommand.allTrajectories, 0, 3)), swerve, conveyor, shooter, intake, storage);
 
     resetOdometry();
     addCommands(

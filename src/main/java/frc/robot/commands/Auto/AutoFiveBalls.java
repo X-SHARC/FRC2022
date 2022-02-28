@@ -5,6 +5,8 @@
 package frc.robot.commands.Auto;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.CollectCargoCommand;
 import frc.robot.commands.ShootWhenReadyCommand;
 import frc.robot.subsystems.Conveyor;
@@ -14,10 +16,10 @@ import frc.robot.subsystems.Storage;
 import frc.robot.subsystems.Swerve;
 import static edu.wpi.first.wpilibj2.command.CommandGroupBase.*;
 
-public class AutoThreeBalls extends AutonomousCommand {
+public class AutoFiveBalls extends AutonomousCommand {
 
 
-  public AutoThreeBalls(
+  public AutoFiveBalls(
     Swerve swerve,
     Conveyor conveyor,
     Shooter shooter,
@@ -46,7 +48,7 @@ public class AutoThreeBalls extends AutonomousCommand {
 
       new InstantCommand(() -> swerve.drive(0, 0, 0, true)),
       
-      new waitCommand(.8),
+      new WaitCommand(.8),
       
       getControllerCommand(trajectories[4], swerve, x_pid, y_pid, thetaController),
       
