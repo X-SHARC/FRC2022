@@ -21,10 +21,10 @@ public class ShootWhenReadyCommand extends CommandBase {
   private int iteration = 0;
   private Swerve sw;
   private SwerveModuleState desiredStates[] = {
-    new SwerveModuleState(0.4,Rotation2d.fromDegrees(45)),
-    new SwerveModuleState(0.4,Rotation2d.fromDegrees(-45)),
-    new SwerveModuleState(0.4,Rotation2d.fromDegrees(-45)),
-    new SwerveModuleState(0.4,Rotation2d.fromDegrees(45)),
+    new SwerveModuleState(0.7,Rotation2d.fromDegrees(45)),
+    new SwerveModuleState(0.7,Rotation2d.fromDegrees(-45)),
+    new SwerveModuleState(0.7,Rotation2d.fromDegrees(-45)),
+    new SwerveModuleState(0.7,Rotation2d.fromDegrees(45)),
   };
 
   /** Creates a new ShootWhenReadyCommand. */
@@ -55,7 +55,7 @@ public class ShootWhenReadyCommand extends CommandBase {
     if (shooter.shooterPID.atSetpoint()) {
       iteration++;
       if(iteration>5){
-        sw.setModuleStates(desiredStates);
+        //sw.setModuleStates(desiredStates);
         conveyor.feedBall();
       }
     } else {

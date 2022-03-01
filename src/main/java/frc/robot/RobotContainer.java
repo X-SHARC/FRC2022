@@ -127,7 +127,8 @@ public class RobotContainer {
       .whileHeld(new RunCommand(()->shooter.setRPM(2700), shooter))
       .whenReleased(new RunCommand(()-> shooter.stop(), shooter));
 
-    Button autoShootButton = new JoystickButton(operator, 4)
+    //normally operator
+    Button autoShootButton = new JoystickButton(driver, 4)
       .whileHeld(shootWhenReadyCommand);
 
     Button[] joystickPressed = {
