@@ -4,9 +4,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Shooter;
 
@@ -16,11 +19,19 @@ public class ShootWhenReadyCommand extends CommandBase {
   private Shooter shooter;
   private int rpm;
   private int iteration = 0;
+  private Swerve sw;
+  private SwerveModuleState desiredStates[] = {
+    new SwerveModuleState(0.4,Rotation2d.fromDegrees(45)),
+    new SwerveModuleState(0.4,Rotation2d.fromDegrees(-45)),
+    new SwerveModuleState(0.4,Rotation2d.fromDegrees(-45)),
+    new SwerveModuleState(0.4,Rotation2d.fromDegrees(45)),
+  };
 
   /** Creates a new ShootWhenReadyCommand. */
-  public ShootWhenReadyCommand(Conveyor conveyor, Shooter shooter) {
+  public ShootWhenReadyCommand(Conveyor conveyor, Shooter shooter, Swerve sw) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(conveyor, shooter);
+    addRequirements(conveyor, shooter, sw);
+    this.sw = sw;
     this.conveyor = conveyor;
     this.shooter = shooter;
     this.rpm = (int) SmartDashboard.getNumber("target shooter RPM", Constants.SHOOT_RPM);
@@ -29,7 +40,6 @@ public class ShootWhenReadyCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  
     conveyor.stop();
     shooter.setRPM(rpm);
     this.rpm = (int) SmartDashboard.getNumber("target shooter RPM", Constants.SHOOT_RPM);
@@ -45,6 +55,7 @@ public class ShootWhenReadyCommand extends CommandBase {
     if (shooter.shooterPID.atSetpoint()) {
       iteration++;
       if(iteration>5){
+        sw.setModuleStates(desiredStates);
         conveyor.feedBall();
       }
     } else {

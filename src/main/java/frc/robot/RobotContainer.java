@@ -55,7 +55,7 @@ public class RobotContainer {
   SwerveDriveCommand driveCommand = new SwerveDriveCommand(swerveDrivetrain, driver);
   StorageCommand storageCommand = new StorageCommand(storage, conveyor, intake);
   CollectCargoCommand collectCargoCommand = new CollectCargoCommand(intake, storage);
-  ShootWhenReadyCommand shootWhenReadyCommand = new ShootWhenReadyCommand(conveyor, shooter);
+  ShootWhenReadyCommand shootWhenReadyCommand = new ShootWhenReadyCommand(conveyor, shooter, swerveDrivetrain);
   ClimberCommand climberCommand = new ClimberCommand(climb, operator);
   RGBCommand rgbCommand = new RGBCommand(addressableLED);
   ThePoPo arka_sokaklar = new ThePoPo(addressableLED);
