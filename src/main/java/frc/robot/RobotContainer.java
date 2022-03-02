@@ -22,6 +22,7 @@ import frc.robot.commands.RGBCommand;
 import frc.robot.commands.ShootWhenReadyCommand;
 import frc.robot.commands.StorageCommand;
 import frc.robot.commands.ThePoPo;
+import frc.robot.commands.Swerve.SwerveCounterDefense;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
 import frc.robot.subsystems.Climb;
@@ -59,6 +60,7 @@ public class RobotContainer {
   ClimberCommand climberCommand = new ClimberCommand(climb, operator);
   RGBCommand rgbCommand = new RGBCommand(addressableLED);
   ThePoPo arka_sokaklar = new ThePoPo(addressableLED);
+  SwerveCounterDefense swerveCounterDefense = new SwerveCounterDefense(swerveDrivetrain, driver);
 
   public RobotContainer() {
     configureButtonBindings();
@@ -78,7 +80,6 @@ public class RobotContainer {
       swerveDrivetrain.resetOdometry(new Pose2d());
       swerveDrivetrain.resetFieldOrientation();
     }));
-
 
 
 
@@ -124,7 +125,7 @@ public class RobotContainer {
 
     Button shooterButton =
       new JoystickButton(operator, 3)
-      .whileHeld(new RunCommand(()->shooter.setRPM(2700), shooter))
+      .whileHeld(new RunCommand(()->shooter.setRPM(2550), shooter))
       .whenReleased(new RunCommand(()-> shooter.stop(), shooter));
 
     //normally operator

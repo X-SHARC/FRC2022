@@ -23,10 +23,10 @@ public class Climb extends SubsystemBase {
   }
 
   public void climbUp(){
-    climbMotor.set(ControlMode.PercentOutput, 0.95);
+    climbMotor.set(ControlMode.PercentOutput, 1.0);
   }
   public void climbDown(){
-    climbMotor.set(ControlMode.PercentOutput, -0.95);
+    climbMotor.set(ControlMode.PercentOutput, -1.0);
   }
 
   public void stop(){
