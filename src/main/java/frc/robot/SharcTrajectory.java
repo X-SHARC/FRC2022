@@ -38,9 +38,6 @@ public class SharcTrajectory {
     private static double y_kp = 8;
 
 
-    public ProfiledPIDController thetaController = new ProfiledPIDController((10), 0, 0, Constants.Swerve.kThetaControllerConstraints);
-
-
     public Trajectory getTrajectory() {
         return trajectory;
     }
@@ -68,7 +65,8 @@ public class SharcTrajectory {
         swerve.resetOdometry(new Pose2d(initialPose.getTranslation(), ((PathPlannerState) trajectory.getStates().get(0)).holonomicRotation));
         swerve.addTrajectoryToField2d(trajectory);
         swerve.resetFieldOrientation(trajectory.getInitialPose().getRotation());
-        
+
+        ProfiledPIDController thetaController = new ProfiledPIDController((10), 0, 0, Constants.Swerve.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
         //thetaController.disableContinuousInput();
         

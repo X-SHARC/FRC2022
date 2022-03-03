@@ -10,9 +10,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -22,6 +24,8 @@ import frc.robot.commands.RGBCommand;
 import frc.robot.commands.ShootWhenReadyCommand;
 import frc.robot.commands.StorageCommand;
 import frc.robot.commands.ThePoPo;
+import frc.robot.commands.Auto.AutoFiveBalls;
+import frc.robot.commands.Auto.AutoThreeBalls;
 import frc.robot.commands.Swerve.SwerveCounterDefense;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.lib.drivers.WS2812Driver;
@@ -62,11 +66,17 @@ public class RobotContainer {
   ThePoPo arka_sokaklar = new ThePoPo(addressableLED);
   SwerveCounterDefense swerveCounterDefense = new SwerveCounterDefense(swerveDrivetrain, driver);
 
+  SendableChooser<Command> autonomousChooser = new SendableChooser<>();
+
   public RobotContainer() {
     configureButtonBindings();
     compressor.enableDigital();
     addressableLED.toggleRGB();
-    SmartDashboard.putString("Auto Mode", Constants.DEFAULT_AUTO_MODE);
+
+    autonomousChooser.setDefaultOption("Do nothing", new PrintCommand("Doing nothing."));
+    autonomousChooser.addOption("Three balls", new AutoThreeBalls(swerveDrivetrain, conveyor, shooter, intake, storage));
+    autonomousChooser.addOption("Five balls", new AutoFiveBalls(swerveDrivetrain, conveyor, shooter, intake, storage));
+    SmartDashboard.putData(autonomousChooser);
   }
 
 
@@ -101,7 +111,7 @@ public class RobotContainer {
       new Button(new BooleanSupplier() {
         @Override
         public boolean getAsBoolean() {
-          return Math.abs(driver.getLeftTriggerAxis()) > 0.4;
+          return Math.abs(driver.getRightTriggerAxis()) > 0.4;
         }
       }),
       new Button(new BooleanSupplier() {
@@ -144,8 +154,8 @@ public class RobotContainer {
       new JoystickButton(operator, 5)
     };
 
-    intakeButtons[0]
-      .whileHeld(collectCargoCommand);
+    //intakeButtons[0]
+      //.whileHeld(collectCargoCommand);
 
     intakeButtons[1]
       .whileHeld(collectCargoCommand);
@@ -176,7 +186,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
 
-    return SharcTrajectory.getFullThreeBall(swerveDrivetrain, conveyor, shooter, intake, storage);
+    return autonomousChooser.getSelected();
   }
 }
 
