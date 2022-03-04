@@ -39,7 +39,7 @@ public class SwerveModule {
 
   public PIDController drivePID;
 
-  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.6043, 1.6043, 0.23523);
+  public final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1.1543, 1.1543, 0.23523);
 
   private int resetOffset = 0;
   private boolean driveEncoderInverted;
@@ -122,6 +122,11 @@ public class SwerveModule {
   public void resetBothEncoders(){
     resetDriveEncoder();
     resetRotationEncoder();
+  }
+
+  public void debug(){
+    SmartDashboard.putNumber(name + " Vel Actual", getDriveMotorRate() );
+    SmartDashboard.putNumber(name + " Vel Setpoint ", drivePID.getSetpoint() );
   }
 
   public void stopMotors(){

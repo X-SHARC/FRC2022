@@ -34,7 +34,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void runBackwards(){
-    intakeMotor.set(ControlMode.PercentOutput, -0.75);
+    intakeMotor.set(ControlMode.PercentOutput, -0.55);
   }
 
   public void stop(){

@@ -61,10 +61,10 @@ public class Swerve extends SubsystemBase {
   // TODO: Update module offsets to match your CANCoder offsets | Done
 
   private double[] pidValues = {
-    0.06198,
-    0.06198,
-    0.06198,
-    0.06198
+    0.09698,
+    0.09698,
+    0.09698,
+    0.09698
   };
 
 
@@ -107,6 +107,13 @@ public class Swerve extends SubsystemBase {
     Constants.Swerve.kinematics,
     getGyro()
   );
+
+  public void stopModules(){
+    modules[0].stopMotors();
+    modules[1].stopMotors();
+    modules[2].stopMotors();
+    modules[3].stopMotors();
+  }
   
 
   public void resetAllEncoders(){
@@ -142,17 +149,17 @@ public class Swerve extends SubsystemBase {
     SwerveModuleState[] states =
     Constants.Swerve.kinematics.toSwerveModuleStates(
         fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyro().minus(fieldAngle))
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyro().plus(fieldAngle))
           : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.Swerve.kMaxSpeed);
-    setClosedLoopStates(states);
+    //setClosedLoopStates(states);
     
-    /*for (int i = 0; i < states.length; i++) {
+    for (int i = 0; i < states.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = states[i];
       module.setDesiredState(state);
     }
-*/
+
     
   }
 
@@ -186,8 +193,10 @@ public class Swerve extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("groAngle", getGyroDouble());
     SmartDashboard.putNumber("field offset", fieldAngle.getDegrees());
+    SmartDashboard.putNumber("bozukModuk", modules[2].getAngle().getDegrees());
 
-    
+    SmartDashboard.putNumber("bozukdegil", modules[3].getAngle().getDegrees());
+
     // SmartDashboard.putNumber("0. SETPOINT", modules[0].drivePID.getSetpoint());
     // SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
 
@@ -216,6 +225,12 @@ public class Swerve extends SubsystemBase {
       modules[2].getState(),
       modules[3].getState()
     };
+    
+    modules[0].debug();
+    modules[1].debug();
+    modules[2].debug();
+    modules[3].debug();
+
     // moduleStates[0].speedMetersPerSecond = Math.abs(modules[0].getDriveEncoderVelocity());
     // moduleStates[1].speedMetersPerSecond = Math.abs(modules[1].getDriveEncoderVelocity());
     // moduleStates[2].speedMetersPerSecond = Math.abs(modules[2].getDriveEncoderVelocity());

@@ -19,12 +19,12 @@ public class SwerveDriveCommand extends CommandBase {
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   // TODO not using them currently, try out and see if you want to keep them for comp
-  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(2.5);
-  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(2.5);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(2.5);
+  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
   double scale = 0.92;
-  double scale2= 0.65;
+  double scale2= 0.85;
   
     /** Creates a new SwerveDriveCommand. */
     public SwerveDriveCommand(Swerve sw, XboxController joystick) {
@@ -49,16 +49,16 @@ public class SwerveDriveCommand extends CommandBase {
 
     final var xSpeed = xSpeedLimiter.calculate(
       (Math.abs(joystick.getLeftY()) < 0.1) ? 0 : joystick.getLeftY())
-      * Constants.Swerve.kMaxSpeed * -scale;
+      * Constants.Swerve.kMaxSpeed * scale;
 
     
     final var ySpeed = ySpeedLimiter.calculate(
       (Math.abs(joystick.getLeftX()) <  0.1) ? 0 : joystick.getLeftX())
-      * Constants.Swerve.kMaxSpeed * -scale;
+      * Constants.Swerve.kMaxSpeed * scale;
      
     final var rot = rotLimiter.calculate(
       (Math.abs(joystick.getRightX()) < 0.1) ? 0 : joystick.getRightX())
-      * Constants.Swerve.kMaxSpeed * -scale;
+      * Constants.Swerve.kMaxSpeed * scale;
 
 
     double[] speeds ={xSpeed, ySpeed, rot}; 

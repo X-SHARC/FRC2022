@@ -6,41 +6,40 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Conveyor;
 
-public class ClimberCommand extends CommandBase {
-  /** Creates a new ClimberCommand. */
-  Climb climb;
+public class ConveyorCommand extends CommandBase {
+  /** Creates a new ConveyorCommand. */
   XboxController operator;
-  public ClimberCommand(Climb climb, XboxController operator) {
-    this.climb = climb;
+  Conveyor conveyor;
+
+  public ConveyorCommand(XboxController operator, Conveyor conveyor) {
     this.operator = operator;
-    addRequirements(climb);
+    this.conveyor = conveyor;
+    addRequirements(conveyor);
     // Use addRequirements() here to declare subsystem dependencies.
   }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    switch(operator.getPOV()){
-      case 0:
-        climb.climbUp();
-        break;
-      case 180:
-        climb.climbDown();
-        break;
-      default:
-        climb.stop();
+    if(Math.abs(operator.getLeftTriggerAxis())>0.4){
+      conveyor.feedBall();
+    }
+
+    if(Math.abs(operator.getRightTriggerAxis())>0.4){
+      conveyor.retractBall();
+    }
+    if(Math.abs(operator.getRightTriggerAxis())<0.4 && Math.abs(operator.getLeftTriggerAxis())<0.4){
+      conveyor.stop();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    conveyor.stop();
+  }
 
   // Returns true when the command should end.
   @Override

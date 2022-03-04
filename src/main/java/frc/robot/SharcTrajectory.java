@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -34,8 +35,8 @@ public class SharcTrajectory {
     private Swerve swerve;
     private Alliance alliance;
     private Trajectory trajectory;
-    private static double x_kp = 0.87;
-    private static double y_kp = 8;
+    private static double x_kp = 1.6;
+    private static double y_kp = 1.9985;
 
 
     public ProfiledPIDController thetaController = new ProfiledPIDController((10), 0, 0, Constants.Swerve.kThetaControllerConstraints);
@@ -98,7 +99,7 @@ public class SharcTrajectory {
     }
 
 
-    public static Command getFullThreeBall(Swerve swerve, Conveyor conveyor, Shooter shooter, Intake intake, Storage storage) {
+    public static Command getFiveBall(Swerve swerve, Conveyor conveyor, Shooter shooter, Intake intake, Storage storage) {
         PIDController x_pid = new PIDController(x_kp, 0, 0);
         PIDController y_pid = new PIDController(y_kp, 0, 0);
         
@@ -130,15 +131,101 @@ public class SharcTrajectory {
         CommandGroupBase commands = 
             (
                 new ShootWhenReadyCommand(conveyor, shooter).withTimeout(.85)
+                .andThen(() -> intake.extendIntake())
+                .andThen(getControllerCommand(trajectories[0], swerve, x_pid, y_pid, thetaController))
+                .andThen(getControllerCommand(trajectories[1], swerve, x_pid, y_pid, thetaController))
+                .andThen(getControllerCommand(trajectories[2], swerve, x_pid, y_pid, thetaController))
+                .andThen(() -> swerve.stopModules())
+                .andThen((new ShootWhenReadyCommand(conveyor, shooter)).withTimeout(1.3))
+                .andThen(getControllerCommand(trajectories[3], swerve, x_pid, y_pid, thetaController))
+                .andThen(() -> swerve.stopModules())
+                .andThen(new RunCommand(() -> {}).withTimeout(.8))
+                .andThen(getControllerCommand(trajectories[4], swerve, x_pid, y_pid, thetaController))
+                .andThen(() -> swerve.stopModules())
+                .andThen((new ShootWhenReadyCommand(conveyor, shooter)).withTimeout(1.3))
+            )
+            .raceWith(new CollectCargoCommand(intake, storage))
+        ;
+        return commands;
+
+
+    }
+
+    public static Command getThreeBall(Swerve swerve, Conveyor conveyor, Shooter shooter, Intake intake, Storage storage) {
+        PIDController x_pid = new PIDController(x_kp, 0, 0);
+        PIDController y_pid = new PIDController(y_kp, 0, 0);
+        
+        ProfiledPIDController thetaController = new ProfiledPIDController(Math.PI, 0, 0, Constants.Swerve.kThetaControllerConstraints);
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        //thetaController.disableContinuousInput();
+        thetaController.reset(swerve.getPose().getRotation().getRadians());
+
+        Trajectory[] trajectories = {
+            PathPlanner.loadPath("three1", 4, 3, false),
+            PathPlanner.loadPath("three2", 4, 3, false),
+            PathPlanner.loadPath("three3", 4, 3, false)
+        };
+        
+        for (int i = 0; i < trajectories.length; i++) {
+            //SmartDashboard.putData("traj"+i, trajectories[i]);
+        }
+
+        var initialPose = trajectories[0].getInitialPose();
+        swerve.resetOdometry(new Pose2d(initialPose.getTranslation(), ((PathPlannerState) trajectories[0].getStates().get(0)).holonomicRotation));
+        swerve.resetFieldOrientation(trajectories[0].getInitialPose().getRotation());
+        
+        SmartDashboard.putData("theta", thetaController);
+        SmartDashboard.putData("x", x_pid);
+        SmartDashboard.putData("y", y_pid);
+
+        CommandGroupBase commands = 
+            (
+                new ShootWhenReadyCommand(conveyor, shooter).withTimeout(.85)
+                .andThen(() -> intake.extendIntake())
                 .andThen(getControllerCommand(trajectories[0], swerve, x_pid, y_pid, thetaController))
                 .andThen(getControllerCommand(trajectories[1], swerve, x_pid, y_pid, thetaController))
                 .andThen(getControllerCommand(trajectories[2], swerve, x_pid, y_pid, thetaController))
                 .andThen(() -> swerve.drive(0, 0, 0, true))
                 .andThen((new ShootWhenReadyCommand(conveyor, shooter)).withTimeout(1.3))
-                .andThen(getControllerCommand(trajectories[3], swerve, x_pid, y_pid, thetaController))
-                .andThen(() -> swerve.drive(0, 0, 0, true))
-                .andThen(new RunCommand(() -> {}).withTimeout(.8))
-                .andThen(getControllerCommand(trajectories[4], swerve, x_pid, y_pid, thetaController))
+            )
+            .raceWith(new CollectCargoCommand(intake, storage))
+        ;
+        return commands;
+
+
+    }
+
+    public static Command getTwoBall(Swerve swerve, Conveyor conveyor, Shooter shooter, Intake intake, Storage storage) {
+        PIDController x_pid = new PIDController(x_kp, 0, 0);
+        PIDController y_pid = new PIDController(y_kp, 0, 0);
+        
+        ProfiledPIDController thetaController = new ProfiledPIDController(Math.PI, 0, 0, Constants.Swerve.kThetaControllerConstraints);
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        //thetaController.disableContinuousInput();
+        thetaController.reset(swerve.getPose().getRotation().getRadians());
+
+        Trajectory[] trajectories = {
+            PathPlanner.loadPath("twoA", 4, 3, false),
+            PathPlanner.loadPath("twoB", 4, 3, false)
+        };
+        
+        for (int i = 0; i < trajectories.length; i++) {
+            //SmartDashboard.putData("traj"+i, trajectories[i]);
+        }
+
+        var initialPose = trajectories[0].getInitialPose();
+        swerve.resetOdometry(new Pose2d(initialPose.getTranslation(), ((PathPlannerState) trajectories[0].getStates().get(0)).holonomicRotation));
+        swerve.resetFieldOrientation(trajectories[0].getInitialPose().getRotation());
+        
+        SmartDashboard.putData("theta", thetaController);
+        SmartDashboard.putData("x", x_pid);
+        SmartDashboard.putData("y", y_pid);
+
+        CommandGroupBase commands = 
+            (
+                new InstantCommand(() -> intake.extendIntake())
+                .andThen(getControllerCommand(trajectories[0], swerve, x_pid, y_pid, thetaController))
+                .andThen(getControllerCommand(trajectories[1], swerve, x_pid, y_pid, thetaController))
                 .andThen(() -> swerve.drive(0, 0, 0, true))
                 .andThen((new ShootWhenReadyCommand(conveyor, shooter)).withTimeout(1.3))
             )
