@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ClimberCommand;
@@ -158,7 +159,8 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
 
-    return SharcTrajectory.getTwoBall(swerveDrivetrain, conveyor, shooter, intake, storage);
+    return SharcTrajectory.getFiveBall(swerveDrivetrain, conveyor, shooter, intake, storage);
+    //return new WaitCommand(15);
   }
 }
 

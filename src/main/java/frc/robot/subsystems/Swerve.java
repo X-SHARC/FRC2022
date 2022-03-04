@@ -72,7 +72,8 @@ public class Swerve extends SubsystemBase {
   private SwerveModule[] modules = new SwerveModule[] {
     new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(-27), true^invertAllModules, new PIDController(pidValues[0], 0, 0)), //! Front Left
     new SwerveModule("FR", new TalonFX(14), new TalonFX(15), new DutyCycleEncoder( new DigitalInput(2)), Rotation2d.fromDegrees(-128), true^invertAllModules, new PIDController(pidValues[1], 0, 0)), //! Front Right
-    new SwerveModule("RL", driveMotorBL, new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(54), false^invertAllModules, new PIDController(pidValues[2], 0, 0)), //! Back Left
+    new SwerveModule("RL", driveMotorBL, new TalonFX(16), new DutyCycleEncoder(new DigitalInput(1)), Rotation2d.fromDegrees(54), 
+    false^invertAllModules, new PIDController(pidValues[2], 0, 0)), //! Back Left
     new SwerveModule("RR", new TalonFX(10), new TalonFX(12), new DutyCycleEncoder( new DigitalInput(3) ), Rotation2d.fromDegrees(-103), true^invertAllModules, new PIDController(pidValues[3], 0, 0))  //! Back Right
   };
 
