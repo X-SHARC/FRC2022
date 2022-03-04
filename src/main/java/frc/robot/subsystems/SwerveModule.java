@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -29,11 +30,12 @@ public class SwerveModule {
   private TalonFX driveMotor;
   private TalonFX angleMotor;
   //private Encoder rotEncoder;
-  private DutyCycleEncoder rotEncoder;
+  //private DutyCycleEncoder rotEncoder;
   // DutyCycleEncoder is used for absolute values. Switch to normal Encoder class for relative.
   // Using absolute has the advantage of zeroing the modules autonomously.
   // If using relative, find a way to mechanically zero out wheel headings before starting the robot.
   Gearbox driveRatio = new Gearbox(6.86, 2);
+  Gearbox angleRatio = new Gearbox(8.16, 1);
   
   private PIDController rotPID = new PIDController(Constants.Swerve.kAngleP, 0, 0);
 
@@ -44,11 +46,10 @@ public class SwerveModule {
   private int resetOffset = 0;
   private boolean driveEncoderInverted;
 
-  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, DutyCycleEncoder rotEncoder, Rotation2d offset, boolean driveEncoderInverted, PIDController drivePID) {
+  public SwerveModule(String name, TalonFX driveMotor, TalonFX angleMotor, Rotation2d offset, boolean driveEncoderInverted, PIDController drivePID) {
     this.name = name;
     this.driveMotor = driveMotor;
     this.angleMotor = angleMotor;
-    this.rotEncoder = rotEncoder;
     this.offset = offset;
     this.driveMotor.setNeutralMode(NeutralMode.Brake);
     this.angleMotor.setNeutralMode(NeutralMode.Brake);
@@ -59,7 +60,7 @@ public class SwerveModule {
   }
 
   public double getDegrees(){
-    return Math.IEEEremainder((rotEncoder.get() * 360. + offset.getDegrees()),
+    return Math.IEEEremainder((angleRatio.calculate(angleMotor.getSelectedSensorPosition() / 2048.0) * 360. + offset.getDegrees()),
      360.);
   }
 
@@ -108,7 +109,7 @@ public class SwerveModule {
   }
 
   public void resetRotationEncoder(){
-    rotEncoder.reset();
+    angleMotor.getSelectedSensorPosition(0);
   }
   
   public void resetDriveEncoder(){
