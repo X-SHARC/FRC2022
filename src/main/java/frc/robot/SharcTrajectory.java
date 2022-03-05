@@ -109,11 +109,11 @@ public class SharcTrajectory {
         thetaController.reset(swerve.getPose().getRotation().getRadians());
 
         Trajectory[] trajectories = {
-            PathPlanner.loadPath("three1", 4, 3, false),
-            PathPlanner.loadPath("three2", 4, 3, false),
-            PathPlanner.loadPath("three3", 4, 3, false),
-            PathPlanner.loadPath("threeplustwo1", 4, 3, false),
-            PathPlanner.loadPath("threeplustwo2", 4, 3, false)
+            PathPlanner.loadPath("three1", 5.5, 4.3, false),
+            PathPlanner.loadPath("three2", 5.5, 4.3, false),
+            PathPlanner.loadPath("three3", 5.5, 4.3, false),
+            PathPlanner.loadPath("threeplustwo1", 5.5, 4.3, false),
+            PathPlanner.loadPath("threeplustwo2", 5.5, 4.3, false)
         };
         
         for (int i = 0; i < trajectories.length; i++) {
