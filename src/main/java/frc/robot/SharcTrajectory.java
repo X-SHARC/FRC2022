@@ -109,11 +109,11 @@ public class SharcTrajectory {
         thetaController.reset(swerve.getPose().getRotation().getRadians());
 
         Trajectory[] trajectories = {
-            PathPlanner.loadPath("three1", 5.5, 4.3, false),
-            PathPlanner.loadPath("three2", 5.5, 4.3, false),
-            PathPlanner.loadPath("three3", 5.5, 4.3, false),
-            PathPlanner.loadPath("threeplustwo1", 5.5, 4.3, false),
-            PathPlanner.loadPath("threeplustwo2", 5.5, 4.3, false)
+            PathPlanner.loadPath("three1", 6, 4.5, false),
+            PathPlanner.loadPath("three2", 6, 4.5, false),
+            PathPlanner.loadPath("three3", 6, 4.5, false),
+            PathPlanner.loadPath("threeplustwo1", 6, 4.5, false),
+            PathPlanner.loadPath("threeplustwo2", 6, 4.5, false)
         };
         
         for (int i = 0; i < trajectories.length; i++) {
@@ -136,13 +136,13 @@ public class SharcTrajectory {
                 .andThen(getControllerCommand(trajectories[1], swerve, x_pid, y_pid, thetaController))
                 .andThen(getControllerCommand(trajectories[2], swerve, x_pid, y_pid, thetaController))
                 .andThen(() -> swerve.stopModules())
-                .andThen((new ShootWhenReadyCommand(conveyor, shooter)).withTimeout(1.3))
+                .andThen((new ShootWhenReadyCommand(conveyor, shooter)).withTimeout(1.55))
                 .andThen(getControllerCommand(trajectories[3], swerve, x_pid, y_pid, thetaController))
                 .andThen(() -> swerve.stopModules())
-                .andThen(new RunCommand(() -> {}).withTimeout(.8))
+                .andThen(new RunCommand(() -> {}).withTimeout(.4))
                 .andThen(getControllerCommand(trajectories[4], swerve, x_pid, y_pid, thetaController))
                 .andThen(() -> swerve.stopModules())
-                .andThen((new ShootWhenReadyCommand(conveyor, shooter)).withTimeout(1.3))
+                .andThen((new ShootWhenReadyCommand(conveyor, shooter)).withTimeout(1.5))
             )
             .raceWith(new CollectCargoCommand(intake, storage))
         ;
