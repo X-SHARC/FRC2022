@@ -108,6 +108,7 @@ public class Swerve extends SubsystemBase {
     Constants.Swerve.kinematics,
     getGyro()
   );
+  private Rotation2d teleopAngle = new Rotation2d(0);
 
   public void stopModules(){
     modules[0].stopMotors();
@@ -150,7 +151,7 @@ public class Swerve extends SubsystemBase {
     SwerveModuleState[] states =
     Constants.Swerve.kinematics.toSwerveModuleStates(
         fieldRelative
-          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyro().plus(fieldAngle))
+          ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyro().plus(fieldAngle).minus(teleopAngle))
           : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.Swerve.kMaxSpeed);
     //setClosedLoopStates(states);
@@ -165,10 +166,14 @@ public class Swerve extends SubsystemBase {
   }
 
   public void resetFieldOrientation() {
-    resetFieldOrientation(getGyro());
+    resetFieldOrientation(new Rotation2d(getGyroDouble()));
   }
   public void resetFieldOrientation(Rotation2d angle) {
     this.fieldAngle = angle;
+  }
+
+  public void resetFieldOrientedTeleOp(){
+    this.teleopAngle = getGyro();
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -199,7 +204,7 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("bozukdegil", modules[3].getAngle().getDegrees());
 
     // SmartDashboard.putNumber("0. SETPOINT", modules[0].drivePID.getSetpoint());
-    // SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
+    // /SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
 
     // SmartDashboard.putNumber("1. SETPOINT", modules[1].drivePID.getSetpoint());
     // SmartDashboard.putNumber("1. Velocity", modules[1].getDriveMotorRate());

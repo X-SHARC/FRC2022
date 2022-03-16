@@ -50,9 +50,7 @@ public class RobotContainer {
   Intake intake = new Intake();
 
   WS2812Driver addressableLED = new WS2812Driver(0,15);
-
   Compressor compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
-
 
   //Joysticks
   XboxController driver = new XboxController(0);
@@ -90,7 +88,7 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     swerveDrivetrain.setDefaultCommand(driveCommand);
-    addressableLED.setDefaultCommand(arka_sokaklar);
+    //addressableLED.setDefaultCommand(arka_sokaklar);
     climb.setDefaultCommand(climberCommand);
     conveyor.setDefaultCommand(conveyorCommand);
 
@@ -153,7 +151,7 @@ public class RobotContainer {
 
 
     new JoystickButton(operator, 8).whileHeld(new RunCommand(()->addressableLED.turnOff(), addressableLED));
-    //new JoystickButton(driver, 2).whileHeld(swerveAntiDefence);
+    new JoystickButton(driver, 2).whileHeld(swerveAntiDefence.alongWith(new RunCommand(()-> intake.retractIntake(), intake)));
   }
 
 

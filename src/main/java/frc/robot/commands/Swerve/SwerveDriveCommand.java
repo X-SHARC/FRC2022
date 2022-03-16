@@ -21,10 +21,10 @@ public class SwerveDriveCommand extends CommandBase {
   // TODO not using them currently, try out and see if you want to keep them for comp
   private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(6);
 
-  double scale = 0.92;
-  double scale2= 0.85;
+  double scale = 1;
+  double scale2= 1;
   
     /** Creates a new SwerveDriveCommand. */
     public SwerveDriveCommand(Swerve sw, XboxController joystick) {
@@ -42,10 +42,18 @@ public class SwerveDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    scale = Math.abs(joystick.getRightTriggerAxis()) > 0.4 ? 1 : scale2;
+    scale = Math.abs(joystick.getRightTriggerAxis()) > 0.4 ? 0.8 : scale2;
 
-    if(scale == 1) joystick.setRumble(RumbleType.kRightRumble, 0.85);
-    else joystick.setRumble(RumbleType.kRightRumble, 0);
+    if(scale != 1){
+      joystick.setRumble(RumbleType.kRightRumble, 0.85);
+      joystick.setRumble(RumbleType.kLeftRumble, 0.85);
+    } 
+      
+    else{
+      joystick.setRumble(RumbleType.kRightRumble, 0);
+      joystick.setRumble(RumbleType.kLeftRumble, 0);
+    } 
+      
 
     final var xSpeed = xSpeedLimiter.calculate(
       (Math.abs(joystick.getLeftY()) < 0.1) ? 0 : joystick.getLeftY())
@@ -58,11 +66,11 @@ public class SwerveDriveCommand extends CommandBase {
      
     final var rot = rotLimiter.calculate(
       (Math.abs(joystick.getRightX()) < 0.1) ? 0 : joystick.getRightX())
-      * Constants.Swerve.kMaxSpeed * scale;
+      * Constants.Swerve.kMaxAngularSpeed * scale;
 
 
-    double[] speeds ={xSpeed, ySpeed, rot}; 
-    SmartDashboard.putNumberArray("controller speeds", speeds);
+    //double[] speeds ={xSpeed, ySpeed, rot}; 
+    //SmartDashboard.putNumberArray("controller speeds", speeds);
     swerveSubsystem.drive(xSpeed, ySpeed, rot, fieldOriented);
 
   }

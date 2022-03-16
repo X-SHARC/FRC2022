@@ -13,10 +13,10 @@ public class SwerveAntiDefense extends CommandBase {
   /** Creates a new SwerveAntiDefense. */
   Swerve swerve;
   private SwerveModuleState desiredStates[] = {
-    new SwerveModuleState(0.7,Rotation2d.fromDegrees(45)),
-    new SwerveModuleState(0.7,Rotation2d.fromDegrees(-45)),
-    new SwerveModuleState(0.7,Rotation2d.fromDegrees(-45)),
-    new SwerveModuleState(0.7,Rotation2d.fromDegrees(45)),
+    new SwerveModuleState(0.0011, Rotation2d.fromDegrees(-45)),
+    new SwerveModuleState(0.0011, Rotation2d.fromDegrees(45)),
+    new SwerveModuleState(0.0011, Rotation2d.fromDegrees(45)),
+    new SwerveModuleState(0.0011, Rotation2d.fromDegrees(-45)),
   };
 
   public SwerveAntiDefense(Swerve swerve) {

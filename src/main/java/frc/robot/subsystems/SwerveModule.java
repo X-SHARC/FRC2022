@@ -95,8 +95,8 @@ public class SwerveModule {
 
   public void calibrate(String Name, boolean offsetCalibration, boolean driveCalibration, boolean rotCalibration){
     if(offsetCalibration){
-      // SmartDashboard.putNumber(Name + " Rot Encoder Value", getAngle().getDegrees());
-      // SmartDashboard.putNumber(Name + " PID Setpoint", rotPID.getSetpoint());
+      SmartDashboard.putNumber(Name + " Rot Encoder Value", getAngle().getDegrees());
+      SmartDashboard.putNumber(Name + " PID Setpoint", rotPID.getSetpoint());
     }
     // ? all the values below should be tunable in Glass
     if(rotCalibration){
