@@ -8,6 +8,8 @@ import edu.wpi.first.cscore.CameraServerJNI;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -87,6 +89,16 @@ public class RobotContainer {
     SmartDashboard.putData(autonomousChooser);
   }
 
+  private void swerveDefence(){
+    SwerveModuleState states[] = {
+      new SwerveModuleState(0.5, Rotation2d.fromDegrees(45)),
+      new SwerveModuleState(0.5, Rotation2d.fromDegrees(45)),
+      new SwerveModuleState(0.5, Rotation2d.fromDegrees(45)),
+      new SwerveModuleState(0.5, Rotation2d.fromDegrees(45))
+    };
+    swerveDrivetrain.setClosedLoopStates(states);
+  }
+
 
   private void configureButtonBindings() {
     swerveDrivetrain.setDefaultCommand(driveCommand);
@@ -153,7 +165,9 @@ public class RobotContainer {
 
 
     new JoystickButton(operator, 8).whileHeld(new RunCommand(()->addressableLED.turnOff(), addressableLED));
-    //new JoystickButton(driver, 2).whileHeld(swerveAntiDefence);
+
+    //Binding will change
+    //new JoystickButton(driver, 2).whileHeld(new RunCommand(()->swerveDefence(), swerveDrivetrain));
   }
 
 

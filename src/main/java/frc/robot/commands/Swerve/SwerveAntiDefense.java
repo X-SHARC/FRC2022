@@ -13,16 +13,21 @@ public class SwerveAntiDefense extends CommandBase {
   /** Creates a new SwerveAntiDefense. */
   Swerve swerve;
   private SwerveModuleState desiredStates[] = {
-    new SwerveModuleState(0.7,Rotation2d.fromDegrees(45)),
-    new SwerveModuleState(0.7,Rotation2d.fromDegrees(-45)),
-    new SwerveModuleState(0.7,Rotation2d.fromDegrees(-45)),
-    new SwerveModuleState(0.7,Rotation2d.fromDegrees(45)),
+    new SwerveModuleState(0.5,Rotation2d.fromDegrees(0)),
+    new SwerveModuleState(0.5,Rotation2d.fromDegrees(0)),
+    new SwerveModuleState(0.5,Rotation2d.fromDegrees(0)),
+    new SwerveModuleState(0.5,Rotation2d.fromDegrees(0)),
   };
 
   public SwerveAntiDefense(Swerve swerve) {
     this.swerve = swerve;
     addRequirements(swerve);
     // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+  @Override
+  public void initialize(){
+    swerve.stopModules();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

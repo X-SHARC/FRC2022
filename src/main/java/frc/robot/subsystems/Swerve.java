@@ -70,11 +70,11 @@ public class Swerve extends SubsystemBase {
 
   final boolean invertAllModules = false;
   private SwerveModule[] modules = new SwerveModule[] {
-    new SwerveModule("FL", new TalonFX(17), new TalonFX(13), Rotation2d.fromDegrees(-27), true^invertAllModules, new PIDController(pidValues[0], 0, 0)), //! Front Left
-    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), Rotation2d.fromDegrees(-128), true^invertAllModules, new PIDController(pidValues[1], 0, 0)), //! Front Right
-    new SwerveModule("RL", driveMotorBL, new TalonFX(16), Rotation2d.fromDegrees(54), 
+    new SwerveModule("FL", new TalonFX(17), new TalonFX(13), Rotation2d.fromDegrees(0), true^invertAllModules, new PIDController(pidValues[0], 0, 0)), //! Front Left
+    new SwerveModule("FR", new TalonFX(14), new TalonFX(15), Rotation2d.fromDegrees(0), true^invertAllModules, new PIDController(pidValues[1], 0, 0)), //! Front Right
+    new SwerveModule("RL", driveMotorBL, new TalonFX(16), Rotation2d.fromDegrees(0), 
     false^invertAllModules, new PIDController(pidValues[2], 0, 0)), //! Back Left
-    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), Rotation2d.fromDegrees(-103), true^invertAllModules, new PIDController(pidValues[3], 0, 0))  //! Back Right
+    new SwerveModule("RR", new TalonFX(10), new TalonFX(12), Rotation2d.fromDegrees(0), true^invertAllModules, new PIDController(pidValues[3], 0, 0))  //! Back Right
   };
 
   public Swerve(boolean isCalibrating) {
@@ -194,9 +194,9 @@ public class Swerve extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("groAngle", getGyroDouble());
     SmartDashboard.putNumber("field offset", fieldAngle.getDegrees());
-    SmartDashboard.putNumber("bozukModuk", modules[2].getAngle().getDegrees());
+    //SmartDashboard.putNumber("bozukModuk", modules[2].getAngle().getDegrees());
 
-    SmartDashboard.putNumber("bozukdegil", modules[3].getAngle().getDegrees());
+    //SmartDashboard.putNumber("bozukdegil", modules[3].getAngle().getDegrees());
 
     // SmartDashboard.putNumber("0. SETPOINT", modules[0].drivePID.getSetpoint());
     // SmartDashboard.putNumber("0. Velocity", modules[0].getDriveMotorRate());
@@ -219,6 +219,14 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Posex", getPose().getX());
     SmartDashboard.putNumber("Posey", getPose().getY());
     SmartDashboard.putNumber("Rot", getPose().getRotation().getRadians());
+
+    SmartDashboard.putNumber("FL rot", modules[0].getDegrees());
+    SmartDashboard.putNumber("FR rot", modules[1].getDegrees());
+    SmartDashboard.putNumber("BL rot", modules[2].getDegrees());
+    SmartDashboard.putNumber("BR rot", modules[3].getDegrees());
+    
+    
+    
 
     SwerveModuleState[] moduleStates = {
       modules[0].getState(),

@@ -37,7 +37,8 @@ public class SwerveModule {
   Gearbox driveRatio = new Gearbox(6.86, 2);
   Gearbox angleRatio = new Gearbox(8.16, 1);
   
-  private PIDController rotPID = new PIDController(Constants.Swerve.kAngleP, 0, 0);
+  //Normal value: 0.007
+  private PIDController rotPID = new PIDController(0.0063, 0, 0);
 
   public PIDController drivePID;
 
