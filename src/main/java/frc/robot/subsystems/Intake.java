@@ -15,7 +15,9 @@ import frc.robot.Constants;
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   WPI_TalonSRX intakeMotor = new WPI_TalonSRX(Constants.INTAKE_ID);
-  DoubleSolenoid intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM ,Constants.INTAKE_SOLENOID_FORWARD_ID, Constants.INTAKE_SOLENOID_REVERSE_ID);
+  public DoubleSolenoid intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM ,Constants.INTAKE_SOLENOID_FORWARD_ID, Constants.INTAKE_SOLENOID_REVERSE_ID);
+  public boolean intakeExtended = false;
+
 
   public Intake() {
     intakeMotor.setInverted(false);
@@ -23,10 +25,12 @@ public class Intake extends SubsystemBase {
 
   public void retractIntake(){
     intakeSolenoid.set(DoubleSolenoid.Value.kReverse);
+    intakeExtended = false;
   }
 
   public void extendIntake(){
     intakeSolenoid.set(DoubleSolenoid.Value.kForward);
+    intakeExtended = true;
   }
 
   public void runForward(){

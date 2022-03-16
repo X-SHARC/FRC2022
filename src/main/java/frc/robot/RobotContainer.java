@@ -30,6 +30,7 @@ import frc.robot.commands.ShootWhenReadyCommand;
 import frc.robot.commands.ThePoPo;
 import frc.robot.commands.Swerve.SwerveAntiDefense;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
+import frc.robot.commands.Swerve.SwerveSpin;
 import frc.robot.lib.drivers.WS2812Driver;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Conveyor;
@@ -67,6 +68,7 @@ public class RobotContainer {
   ThePoPo arka_sokaklar = new ThePoPo(addressableLED);
   ConveyorCommand conveyorCommand = new ConveyorCommand(operator, conveyor);
   SwerveAntiDefense swerveAntiDefence = new SwerveAntiDefense(swerveDrivetrain);
+  SwerveSpin swerveSpin = new SwerveSpin(swerveDrivetrain,intake);
 
   SendableChooser<Command> autonomousChooser = new SendableChooser<>();
 
@@ -152,6 +154,8 @@ public class RobotContainer {
 
     new JoystickButton(operator, 8).whileHeld(new RunCommand(()->addressableLED.turnOff(), addressableLED));
     new JoystickButton(driver, 2).whileHeld(swerveAntiDefence.alongWith(new RunCommand(()-> intake.retractIntake(), intake)));
+
+    new JoystickButton(driver, 4).toggleWhenPressed(swerveSpin);
   }
 
 
