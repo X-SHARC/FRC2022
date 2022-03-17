@@ -35,8 +35,8 @@ public class SharcTrajectory {
     private Swerve swerve;
     private Alliance alliance;
     private Trajectory trajectory;
-    private static double x_kp = 1.6;
-    private static double y_kp = 1.9985;
+    private static double x_kp = 3.2;
+    private static double y_kp = 3.2;
 
 
     public ProfiledPIDController thetaController = new ProfiledPIDController((10), 0, 0, Constants.Swerve.kThetaControllerConstraints);
@@ -130,19 +130,19 @@ public class SharcTrajectory {
 
         CommandGroupBase commands = 
             (
-                new ShootWhenReadyCommand(conveyor, shooter).withTimeout(.85)
+                new ShootWhenReadyCommand(conveyor, shooter,swerve).withTimeout(.85)
                 .andThen(() -> intake.extendIntake())
                 .andThen(getControllerCommand(trajectories[0], swerve, x_pid, y_pid, thetaController))
                 .andThen(getControllerCommand(trajectories[1], swerve, x_pid, y_pid, thetaController))
                 .andThen(getControllerCommand(trajectories[2], swerve, x_pid, y_pid, thetaController))
                 .andThen(() -> swerve.stopModules())
-                .andThen((new ShootWhenReadyCommand(conveyor, shooter)).withTimeout(1.55))
+                .andThen((new ShootWhenReadyCommand(conveyor, shooter,swerve)).withTimeout(1.55))
                 .andThen(getControllerCommand(trajectories[3], swerve, x_pid, y_pid, thetaController))
                 .andThen(() -> swerve.stopModules())
                 .andThen(new RunCommand(() -> {}).withTimeout(.4))
                 .andThen(getControllerCommand(trajectories[4], swerve, x_pid, y_pid, thetaController))
                 .andThen(() -> swerve.stopModules())
-                .andThen((new ShootWhenReadyCommand(conveyor, shooter)).withTimeout(1.5))
+                .andThen((new ShootWhenReadyCommand(conveyor, shooter,swerve)).withTimeout(1.5))
             )
             .raceWith(new CollectCargoCommand(intake, storage))
         ;
@@ -180,13 +180,13 @@ public class SharcTrajectory {
 
         CommandGroupBase commands = 
             (
-                new ShootWhenReadyCommand(conveyor, shooter).withTimeout(.85)
+                new ShootWhenReadyCommand(conveyor, shooter,swerve).withTimeout(.85)
                 .andThen(() -> intake.extendIntake())
                 .andThen(getControllerCommand(trajectories[0], swerve, x_pid, y_pid, thetaController))
                 .andThen(getControllerCommand(trajectories[1], swerve, x_pid, y_pid, thetaController))
                 .andThen(getControllerCommand(trajectories[2], swerve, x_pid, y_pid, thetaController))
                 .andThen(() -> swerve.drive(0, 0, 0, true))
-                .andThen((new ShootWhenReadyCommand(conveyor, shooter)).withTimeout(1.3))
+                .andThen((new ShootWhenReadyCommand(conveyor, shooter,swerve)).withTimeout(1.3))
             )
             .raceWith(new CollectCargoCommand(intake, storage))
         ;
@@ -227,7 +227,7 @@ public class SharcTrajectory {
                 .andThen(getControllerCommand(trajectories[0], swerve, x_pid, y_pid, thetaController))
                 .andThen(getControllerCommand(trajectories[1], swerve, x_pid, y_pid, thetaController))
                 .andThen(() -> swerve.drive(0, 0, 0, true))
-                .andThen((new ShootWhenReadyCommand(conveyor, shooter)).withTimeout(1.3))
+                .andThen((new ShootWhenReadyCommand(conveyor, shooter,swerve)).withTimeout(1.3))
             )
             .raceWith(new CollectCargoCommand(intake, storage))
         ;

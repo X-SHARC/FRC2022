@@ -4,9 +4,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Shooter;
 
@@ -14,16 +17,24 @@ public class ShootWhenReadyCommand extends CommandBase {
 
   private Conveyor conveyor;
   private Shooter shooter;
+  private Swerve swerve;
   private int rpm;
   private int iteration = 0;
+  private SwerveModuleState desiredStates[] = {
+    new SwerveModuleState(0.0011, Rotation2d.fromDegrees(-45)),
+    new SwerveModuleState(0.0011, Rotation2d.fromDegrees(45)),
+    new SwerveModuleState(0.0011, Rotation2d.fromDegrees(45)),
+    new SwerveModuleState(0.0011, Rotation2d.fromDegrees(-45)),
+  };
 
   /** Creates a new ShootWhenReadyCommand. */
-  public ShootWhenReadyCommand(Conveyor conveyor, Shooter shooter) {
+  public ShootWhenReadyCommand(Conveyor conveyor, Shooter shooter, Swerve swerve) {
     SmartDashboard.putNumber("target shooter RPM", Constants.SHOOT_RPM);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(conveyor, shooter);
     this.conveyor = conveyor;
     this.shooter = shooter;
+    this.swerve = swerve;
     this.rpm = (int) SmartDashboard.getNumber("target shooter RPM", Constants.SHOOT_RPM);
   }
   
@@ -40,8 +51,8 @@ public class ShootWhenReadyCommand extends CommandBase {
   @Override
   public void execute() {
     
-    
     shooter.setRPM(rpm);
+    swerve.setModuleStates(desiredStates);
     
     if (shooter.shooterPID.atSetpoint()) {
       iteration++;

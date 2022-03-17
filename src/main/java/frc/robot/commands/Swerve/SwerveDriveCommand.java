@@ -24,7 +24,7 @@ public class SwerveDriveCommand extends CommandBase {
   private final SlewRateLimiter rotLimiter = new SlewRateLimiter(6);
 
   double scale = 1;
-  double scale2= 1;
+  double scale2= 0.5;
   
     /** Creates a new SwerveDriveCommand. */
     public SwerveDriveCommand(Swerve sw, XboxController joystick) {
@@ -42,11 +42,12 @@ public class SwerveDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    scale = Math.abs(joystick.getRightTriggerAxis()) > 0.4 ? 0.8 : scale2;
+    scale = Math.abs(joystick.getRightTriggerAxis()) < 0.4 ? 1: scale2;
+    //scale = Math.abs(joystick.getRightTriggerAxis()) > 0.4 ? 0.8 : scale2;
 
-    if(scale != 1){
-      joystick.setRumble(RumbleType.kRightRumble, 0.85);
-      joystick.setRumble(RumbleType.kLeftRumble, 0.85);
+    if(scale == scale2){
+      joystick.setRumble(RumbleType.kRightRumble, 0.55);
+      joystick.setRumble(RumbleType.kLeftRumble, 0.55);
     } 
       
     else{
