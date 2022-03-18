@@ -40,6 +40,10 @@ public class Shooter extends SubsystemBase {
   double error;
   double output;
 
+  public WPI_TalonFX getShooterMasterMotor() {
+    return shooterMasterMotor;
+  }
+
   public Shooter() {
     shooterSlaveMotor.setInverted(false);
     shooterMasterMotor.setInverted(true);

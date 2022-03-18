@@ -30,7 +30,7 @@ public class SwerveSpin extends CommandBase {
 
   @Override
   public void execute() {
-    swerve.drive(0, 0, 3, true);
+    swerve.drive(0, 0, 4.5, true);
   }
 
   // Called once the command ends or is interrupted.

@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.CollectCargoCommand;
 import frc.robot.commands.ConveyorCommand;
+import frc.robot.commands.PlayMusic;
 import frc.robot.commands.RGBCommand;
 import frc.robot.commands.ShootWhenReadyCommand;
 import frc.robot.commands.ThePoPo;
@@ -69,6 +70,7 @@ public class RobotContainer {
   ConveyorCommand conveyorCommand = new ConveyorCommand(operator, conveyor);
   SwerveAntiDefense swerveAntiDefence = new SwerveAntiDefense(swerveDrivetrain);
   SwerveSpin swerveSpin = new SwerveSpin(swerveDrivetrain,intake);
+  PlayMusic playMusic = new PlayMusic(shooter);
 
   SendableChooser<Command> autonomousChooser = new SendableChooser<>();
 
@@ -85,10 +87,12 @@ public class RobotContainer {
     autonomousChooser.addOption("Three balls", SharcTrajectory.getThreeBall(swerveDrivetrain, conveyor, shooter, intake, storage));
     autonomousChooser.addOption("Five balls", SharcTrajectory.getFiveBall(swerveDrivetrain, conveyor, shooter, intake, storage));
     SmartDashboard.putData(autonomousChooser);
+    
   }
 
 
   private void configureButtonBindings() {
+    new JoystickButton(operator, 4).toggleWhenPressed(playMusic);
     swerveDrivetrain.setDefaultCommand(driveCommand);
     //addressableLED.setDefaultCommand(arka_sokaklar);
     climb.setDefaultCommand(climberCommand);
@@ -102,7 +106,7 @@ public class RobotContainer {
 
 
 
-    // operator buttons
+    // operator buttonsss
 
 
     Button shooterButton =
