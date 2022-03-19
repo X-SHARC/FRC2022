@@ -92,7 +92,7 @@ public class RobotContainer {
 
 
   private void configureButtonBindings() {
-    new JoystickButton(operator, 4).toggleWhenPressed(playMusic);
+    //new JoystickButton(operator, 4).toggleWhenPressed(playMusic);
     swerveDrivetrain.setDefaultCommand(driveCommand);
     //addressableLED.setDefaultCommand(arka_sokaklar);
     climb.setDefaultCommand(climberCommand);
@@ -160,6 +160,9 @@ public class RobotContainer {
     new JoystickButton(driver, 2).whileHeld(swerveAntiDefence.alongWith(new RunCommand(()-> intake.retractIntake(), intake)));
 
     new JoystickButton(driver, 4).toggleWhenPressed(swerveSpin);
+
+    Button storageButton = new JoystickButton(operator, 2).whileHeld(new RunCommand(()->storage.storageBackwards(), storage));
+    storageButton.whenReleased(new RunCommand(()->storage.stop(), storage));
   }
 
 

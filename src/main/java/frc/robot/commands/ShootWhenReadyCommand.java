@@ -35,7 +35,9 @@ public class ShootWhenReadyCommand extends CommandBase {
     this.conveyor = conveyor;
     this.shooter = shooter;
     this.swerve = swerve;
-    this.rpm = (int) SmartDashboard.getNumber("target shooter RPM", Constants.SHOOT_RPM);
+    //this.rpm = (int) SmartDashboard.getNumber("target shooter RPM", Constants.SHOOT_RPM);
+    this.rpm = 2800;
+  
   }
   
   // Called when the command is initially scheduled.
@@ -44,7 +46,7 @@ public class ShootWhenReadyCommand extends CommandBase {
   
     conveyor.stop();
     shooter.setRPM(rpm);
-    this.rpm = (int) SmartDashboard.getNumber("target shooter RPM", Constants.SHOOT_RPM);
+    this.rpm = 2800;
   }
   
   // Called every time the scheduler runs while the command is scheduled.
