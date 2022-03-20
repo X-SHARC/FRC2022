@@ -228,6 +228,7 @@ public class SharcTrajectory {
                 .andThen(getControllerCommand(trajectories[1], swerve, x_pid, y_pid, thetaController))
                 .andThen(() -> swerve.drive(0, 0, 0, true))
                 .andThen((new ShootWhenReadyCommand(conveyor, shooter,swerve)).withTimeout(1.3))
+                .andThen(new RunCommand(()->swerve.drive(0.5, 0.5, 0, true)).withTimeout(1.3))
             )
             .raceWith(new CollectCargoCommand(intake, storage))
         ;
