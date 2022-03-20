@@ -168,8 +168,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
 
-    return SharcTrajectory.getFiveBall(swerveDrivetrain, conveyor, shooter, intake, storage);
+    return SharcTrajectory.getTwoBall(swerveDrivetrain, conveyor, shooter, intake, storage);
     //return new WaitCommand(15);
   }
 }
-
