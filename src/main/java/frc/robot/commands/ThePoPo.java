@@ -18,7 +18,7 @@ public class ThePoPo extends SequentialCommandGroup {
   /** Creates a new PoPo. */
   public ThePoPo(WS2812Driver led) {
     this.led = led;
-    System.out.println("the po-lice is coming");
+    //System.out.println("the po-lice is coming");
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(

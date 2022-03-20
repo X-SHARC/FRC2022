@@ -94,7 +94,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //new JoystickButton(operator, 4).toggleWhenPressed(playMusic);
     swerveDrivetrain.setDefaultCommand(driveCommand);
-    //addressableLED.setDefaultCommand(arka_sokaklar);
+    addressableLED.setDefaultCommand(arka_sokaklar);
     climb.setDefaultCommand(climberCommand);
     conveyor.setDefaultCommand(conveyorCommand);
 
