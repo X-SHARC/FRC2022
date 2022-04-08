@@ -138,7 +138,7 @@ public class WS2812Driver extends SubsystemBase {
         m_ledBuffer.setRGB(i, r1, g1, b1);
       }
     }
-    m_ledBuffer.setRGB((ll/2)+1, 255, 255, 255);
+    m_ledBuffer.setRGB((m_ledBuffer.getLength()/2)-1, 255, 255, 255);
     m_led.setData(m_ledBuffer);
   }
 
