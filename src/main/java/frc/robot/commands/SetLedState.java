@@ -30,7 +30,43 @@ public class SetLedState extends CommandBase {
   public void execute() {
     switch (RobotContainer.state.getAlignmentState()){
       case SUCCESS:
-        //led.lightOneSide(Side.RIGHT, hue);
+        led.lightOneSide(Side.RIGHT, 120);
+      case ALIGNING:
+        led.lightOneSide(Side.RIGHT, 60);
+        break;
+      case FAIL:
+        led.lightOneSide(Side.RIGHT, 0);
+        break;
+      case IDLE:
+        led.lightOneSide(Side.RIGHT, 30);
+        break;
+      case TIMEOUT:
+        led.lightOneSide(Side.RIGHT, 140);
+        break;
+      default:
+        led.lightOneSide(Side.RIGHT,20);
+        break;
+    }
+
+    switch (RobotContainer.state.getDistanceState())
+    {
+      case SUCCESS:
+        led.lightOneSide(Side.LEFT, 120);
+      case ALIGNING:
+        led.lightOneSide(Side.LEFT, 60);
+        break;
+      case FAIL:
+        led.lightOneSide(Side.LEFT, 0);
+        break;
+      case IDLE:
+        led.lightOneSide(Side.LEFT, 30);
+        break;
+      case TIMEOUT:
+        led.lightOneSide(Side.LEFT, 140);
+        break;
+      default:
+        led.lightOneSide(Side.LEFT,20);
+        break;
     }
   }
 

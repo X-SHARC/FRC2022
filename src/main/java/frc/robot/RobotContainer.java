@@ -28,6 +28,7 @@ import frc.robot.commands.CollectCargoCommand;
 import frc.robot.commands.ConveyorCommand;
 import frc.robot.commands.PlayMusic;
 import frc.robot.commands.RGBCommand;
+import frc.robot.commands.SetLedState;
 import frc.robot.commands.ShootWhenReadyCommand;
 import frc.robot.commands.ThePoPo;
 import frc.robot.commands.Swerve.AutoAlign;
@@ -81,6 +82,7 @@ public class RobotContainer {
   AutoAlignWithShoot alignWithShoot = new AutoAlignWithShoot(limelight, swerveDrivetrain, conveyor, shooter);
   AutoDistance autoDistance = new AutoDistance(swerveDrivetrain, limelight);
   SendableChooser<Command> autonomousChooser = new SendableChooser<>();
+  SetLedState setLEDstate = new SetLedState(addressableLED);
 
   public RobotContainer() {
     //camera.setExposureAuto();
@@ -102,7 +104,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //new JoystickButton(operator, 4).toggleWhenPressed(playMusic);
     swerveDrivetrain.setDefaultCommand(driveCommand);
-    addressableLED.setDefaultCommand(arka_sokaklar);
+    addressableLED.setDefaultCommand(setLEDstate);
     climb.setDefaultCommand(climberCommand);
     conveyor.setDefaultCommand(conveyorCommand);
 
