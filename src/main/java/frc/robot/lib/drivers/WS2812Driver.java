@@ -19,12 +19,14 @@ public class WS2812Driver extends SubsystemBase {
   int breathe = 255;
   boolean breatheReversed = false;
   int breatheH = 10;
-  int blinkCount = 0; 
+  int blinkCount = 0;
+  int ll; 
 
   public WS2812Driver(int dataPort, int ledLength) {
     m_led = new AddressableLED(dataPort);
     m_ledBuffer = new AddressableLEDBuffer(ledLength);
     m_led.setLength(m_ledBuffer.getLength());
+    this.ll = ledLength;
 
     setColor(0, 255, 0);
     //breathe();
@@ -35,6 +37,7 @@ public class WS2812Driver extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
   }
 
   public static void setColor(int r, int g, int b) {
@@ -120,6 +123,23 @@ public class WS2812Driver extends SubsystemBase {
     }
     m_led.setData(m_ledBuffer);
 
+  }
+
+  public void setAllLeds(Side s,int r1, int g1, int b1)
+  {
+    if (s== Side.LEFT){
+      for (int i = 0; i < m_ledBuffer.getLength()/2; i++)
+      {
+        m_ledBuffer.setRGB(i, r1, g1, b1);
+      }}
+    else {
+      for (int i = m_ledBuffer.getLength()-1; i>(m_ledBuffer.getLength()/2)+1; i--)
+      {
+        m_ledBuffer.setRGB(i, r1, g1, b1);
+      }
+    }
+    m_ledBuffer.setRGB((ll/2)+1, 255, 255, 255);
+    m_led.setData(m_ledBuffer);
   }
 
 }

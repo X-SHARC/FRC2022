@@ -13,6 +13,7 @@ import frc.robot.lib.drivers.WS2812Driver.Side;
 public class SetLedState extends CommandBase {
   /** Creates a new SetLedState. */
   WS2812Driver led;
+
   public SetLedState(WS2812Driver led) {
     this.led = led;
     addRequirements(led);
@@ -28,51 +29,54 @@ public class SetLedState extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    switch (RobotContainer.state.getAlignmentState()){
+    switch (RobotContainer.state.getAlignmentState()) {
       case SUCCESS:
-        led.lightOneSide(Side.RIGHT, 120);
+        led.setAllLeds(Side.RIGHT, 0, 255, 0);
+        break;
       case ALIGNING:
-        led.lightOneSide(Side.RIGHT, 60);
+        led.setAllLeds(Side.RIGHT, 0, 255, 100);
         break;
       case FAIL:
-        led.lightOneSide(Side.RIGHT, 0);
+        led.setAllLeds(Side.RIGHT, 255, 0, 0);
         break;
       case IDLE:
-        led.lightOneSide(Side.RIGHT, 30);
+        led.setAllLeds(Side.RIGHT, 255, 255, 100);
         break;
       case TIMEOUT:
-        led.lightOneSide(Side.RIGHT, 140);
+        led.setAllLeds(Side.RIGHT, 0, 40, 0);
         break;
       default:
-        led.lightOneSide(Side.RIGHT,20);
+        led.setAllLeds(Side.RIGHT, 0, 0, 0);
         break;
     }
 
-    switch (RobotContainer.state.getDistanceState())
-    {
+    switch (RobotContainer.state.getDistanceState()) {
       case SUCCESS:
-        led.lightOneSide(Side.LEFT, 120);
+        led.setAllLeds(Side.LEFT, 0, 255, 0);
+        break;
       case ALIGNING:
-        led.lightOneSide(Side.LEFT, 60);
+        led.setAllLeds(Side.LEFT, 0, 255, 100);
         break;
       case FAIL:
-        led.lightOneSide(Side.LEFT, 0);
+        led.setAllLeds(Side.LEFT, 255, 0, 0);
         break;
       case IDLE:
-        led.lightOneSide(Side.LEFT, 30);
+        led.setAllLeds(Side.LEFT, 255, 255, 100);
         break;
       case TIMEOUT:
-        led.lightOneSide(Side.LEFT, 140);
+        led.setAllLeds(Side.LEFT, 0, 40, 0);
         break;
       default:
-        led.lightOneSide(Side.LEFT,20);
+        led.setAllLeds(Side.LEFT, 0, 0, 0);
         break;
     }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

@@ -15,6 +15,7 @@ public class RobotState {
     public enum DistanceState {
         TIMEOUT, SUCCESS, FAIL, ALIGNING, IDLE
     }
+    
 
     private AlignmentState alignmentState = AlignmentState.IDLE;
     private DistanceState distanceState = DistanceState.IDLE;
