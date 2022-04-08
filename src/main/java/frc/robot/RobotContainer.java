@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.AutoAlignWithShoot;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.CollectCargoCommand;
 import frc.robot.commands.ConveyorCommand;
@@ -29,6 +30,7 @@ import frc.robot.commands.PlayMusic;
 import frc.robot.commands.RGBCommand;
 import frc.robot.commands.ShootWhenReadyCommand;
 import frc.robot.commands.ThePoPo;
+import frc.robot.commands.Swerve.AutoAlign;
 import frc.robot.commands.Swerve.SwerveAntiDefense;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.commands.Swerve.SwerveSpin;
@@ -36,6 +38,7 @@ import frc.robot.lib.drivers.WS2812Driver;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Storage;
 import frc.robot.subsystems.Swerve;
@@ -50,6 +53,7 @@ public class RobotContainer {
   Conveyor conveyor = new Conveyor();
   Climb climb = new Climb();
   Intake intake = new Intake();
+  Limelight limelight = new Limelight();
 
   WS2812Driver addressableLED = new WS2812Driver(0,15);
   Compressor compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
@@ -71,6 +75,8 @@ public class RobotContainer {
   SwerveAntiDefense swerveAntiDefence = new SwerveAntiDefense(swerveDrivetrain);
   SwerveSpin swerveSpin = new SwerveSpin(swerveDrivetrain,intake);
   PlayMusic playMusic = new PlayMusic(shooter);
+  AutoAlign autoAlign = new AutoAlign(limelight, swerveDrivetrain);
+  AutoAlignWithShoot alignWithShoot = new AutoAlignWithShoot(limelight, swerveDrivetrain, conveyor, shooter);
 
   SendableChooser<Command> autonomousChooser = new SendableChooser<>();
 
@@ -115,8 +121,11 @@ public class RobotContainer {
       .whenReleased(new RunCommand(()-> shooter.stop(), shooter));
 
     //normally operator
-    Button autoShootButton = new JoystickButton(driver, 5)
+    Button autoShootButton = new JoystickButton(driver, 6)
       .whileHeld(shootWhenReadyCommand);
+
+    Button autoAlignAndShootButton = new JoystickButton(driver, 5)
+      .whileHeld(alignWithShoot);
 
     Button[] joystickPressed = {
       new JoystickButton(operator, 9),
@@ -163,6 +172,10 @@ public class RobotContainer {
 
     Button storageButton = new JoystickButton(operator, 2).whileHeld(new RunCommand(()->storage.storageBackwards(), storage));
     storageButton.whenReleased(new RunCommand(()->storage.stop(), storage));
+
+
+    Button autoAlignButton = new JoystickButton(driver, 3).whileHeld(autoAlign);
+    
   }
 
 
