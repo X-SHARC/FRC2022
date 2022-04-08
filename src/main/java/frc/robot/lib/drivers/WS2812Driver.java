@@ -120,6 +120,6 @@ public class WS2812Driver extends SubsystemBase {
     }
     m_led.setData(m_ledBuffer);
 
-  } 
+  }
 
 }
