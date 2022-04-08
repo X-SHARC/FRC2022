@@ -5,16 +5,18 @@
 package frc.robot.commands.Swerve;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
+import frc.robot.RobotState.AlignmentState;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 
 public class AutoAlign extends CommandBase {
   /** Creates a new AutoAlign. */
   PIDController rotController = new PIDController(0.0798, 0, 0.00274);
-  double targetAngle = 0;
-  double currentAngle = 0;
+  Timer timer = new Timer();
   Limelight LL;
   Swerve swerve;
 
@@ -28,16 +30,21 @@ public class AutoAlign extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    currentAngle = swerve.getGyroDouble();
-    targetAngle = LL.getX() + currentAngle;
+    timer.start();
+    timer.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    targetAngle = LL.getX();
-    targetAngle = LL.getX() + currentAngle;
-    swerve.drive(0, 0, -Constants.Swerve.kMaxAngularSpeed * rotController.calculate(LL.getX(), 0), true);
+    double angle = LL.getX();
+    if(angle != 0.0) {
+      RobotContainer.state.setAlignmentState(AlignmentState.ALIGNING);
+      swerve.drive(0, 0, -Constants.Swerve.kMaxAngularSpeed * rotController.calculate(angle, 0), true);
+    }
+    else {
+      RobotContainer.state.setAlignmentState(AlignmentState.FAIL);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -49,6 +56,15 @@ public class AutoAlign extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return rotController.atSetpoint();
+    if(rotController.atSetpoint()) {
+      timer.stop();
+      RobotContainer.state.setAlignmentState(AlignmentState.SUCCESS);
+      return true;
+    }
+    else if(timer.get() > 1.2) {
+      RobotContainer.state.setAlignmentState(AlignmentState.TIMEOUT);
+      return true;
+    }
+    return false;
   }
 }

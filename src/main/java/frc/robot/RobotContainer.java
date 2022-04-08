@@ -46,6 +46,7 @@ import frc.robot.subsystems.Swerve;
 
 
 public class RobotContainer {
+  public static RobotState state = new RobotState();
   //Subsystems
   Swerve swerveDrivetrain = new Swerve(true);
   Shooter shooter = new Shooter();
