@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.lib.vision.VisionTarget;
 
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
@@ -27,6 +28,8 @@ public class Limelight extends SubsystemBase {
     PROCESSING, OFF, ON, BLINKING
   }
 
+  VisionTarget target = new VisionTarget(2.64, 1.05, 58.8);
+
   public Limelight() {
     table = NetworkTableInstance.getDefault().getTable("limelight");
     tx = table.getEntry("tx");
@@ -34,6 +37,10 @@ public class Limelight extends SubsystemBase {
     ta = table.getEntry("ta");
   }
 
+  public double getDistance(){
+    return target.getDistance();
+  }
+  
   //write getters to get x y and area
   public double getX() {
     return x;
@@ -78,12 +85,22 @@ public class Limelight extends SubsystemBase {
     // read values periodically
     x = tx.getDouble(0.0);
     y = ty.getDouble(0.0);
+    target.update(x, y);
     area = ta.getDouble(0.0);
 
     // post to smart dashboard periodically
     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
+    SmartDashboard.putNumber("Limelight Distance", getDistance());
+    SmartDashboard.putNumber("angle", 
+      Math.toDegrees(
+        Math.atan( 
+         ( (2.64-1.05) - 1.36*Math.tan(Math.toRadians(y) ) ) /
+         ( 1.36 + (2.64-1.05) * Math.tan(Math.toRadians(y) ))
+       )
+      )
+    );
     
   }
 }

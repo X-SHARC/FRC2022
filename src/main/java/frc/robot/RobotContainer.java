@@ -31,6 +31,7 @@ import frc.robot.commands.RGBCommand;
 import frc.robot.commands.ShootWhenReadyCommand;
 import frc.robot.commands.ThePoPo;
 import frc.robot.commands.Swerve.AutoAlign;
+import frc.robot.commands.Swerve.AutoDistance;
 import frc.robot.commands.Swerve.SwerveAntiDefense;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.commands.Swerve.SwerveSpin;
@@ -78,7 +79,7 @@ public class RobotContainer {
   PlayMusic playMusic = new PlayMusic(shooter);
   AutoAlign autoAlign = new AutoAlign(limelight, swerveDrivetrain);
   AutoAlignWithShoot alignWithShoot = new AutoAlignWithShoot(limelight, swerveDrivetrain, conveyor, shooter);
-
+  AutoDistance autoDistance = new AutoDistance(swerveDrivetrain, limelight);
   SendableChooser<Command> autonomousChooser = new SendableChooser<>();
 
   public RobotContainer() {
@@ -114,7 +115,9 @@ public class RobotContainer {
 
 
     // operator buttonsss
-
+    //bok
+    Button autoDistanceButton = new JoystickButton(driver, 1)
+      .whileHeld(autoDistance);
 
     Button shooterButton =
       new JoystickButton(operator, 3)

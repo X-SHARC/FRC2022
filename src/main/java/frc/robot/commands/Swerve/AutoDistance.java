@@ -7,47 +7,45 @@ package frc.robot.commands.Swerve;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.RobotState.AlignmentState;
+import frc.robot.RobotState.DistanceState;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 
-public class AutoAlign extends CommandBase {
-  /** Creates a new AutoAlign. */
-  PIDController rotController = new PIDController(0.0708, 0, 0.002084);
-  Timer timer = new Timer();
-  Limelight LL;
+public class AutoDistance extends CommandBase {
   Swerve swerve;
-  boolean isFinished = false;
+  Limelight LL;
   boolean temp = true;
   double atSetpointTime = 0;
+  Timer timer = new Timer();
+  PIDController distController = new PIDController(9.58, 0, 0);
 
-  public AutoAlign(Limelight LL, Swerve swerve) {
-    this.LL = LL;
+
+  public AutoDistance(Swerve swerve, Limelight LL) {
     this.swerve = swerve;
-    addRequirements(LL);
-    rotController.setTolerance(1);
-  }
+    this.LL = LL;
+    addRequirements(swerve, LL);
+    distController.setTolerance(0.05);
+    }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     timer.start();
     timer.reset();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double angle = LL.getX();
-    if(angle != 0.0) {
-      RobotContainer.state.setAlignmentState(AlignmentState.ALIGNING);
-      swerve.drive(0, 0, -Constants.Swerve.kMaxAngularSpeed * rotController.calculate(angle, 0), true);
+    double distance = LL.getDistance();
+    if(LL.getY() != 0.0) {
+      RobotContainer.state.setDistanceState(DistanceState.ALIGNING);
+      swerve.drive(-distController.calculate(distance, 1.36), 0, 0, false);
     }
     else {
-      RobotContainer.state.setAlignmentState(AlignmentState.FAIL);
+      RobotContainer.state.setDistanceState(DistanceState.FAIL);
+      swerve.drive(0, 0, 0, true);
     }
+
   }
 
   // Called once the command ends or is interrupted.
@@ -59,19 +57,20 @@ public class AutoAlign extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(rotController.atSetpoint()) {
+    if(distController.atSetpoint()) {
       if(temp){
         atSetpointTime = timer.get();
         temp = false;
       }
       else if((timer.get()-atSetpointTime) >0.2){
         timer.stop();
-        RobotContainer.state.setAlignmentState(AlignmentState.SUCCESS);
+        RobotContainer.state.setDistanceState(DistanceState.SUCCESS);
         return true;
       }
     }
-    else if(timer.get() > 0.88) {
-      RobotContainer.state.setAlignmentState(AlignmentState.TIMEOUT);
+    else if(timer.get() > 0.9
+    ) {
+      RobotContainer.state.setDistanceState(DistanceState.TIMEOUT);
       return true;
     }
     return false;

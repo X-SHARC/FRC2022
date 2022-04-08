@@ -7,6 +7,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Swerve.AutoAlign;
+import frc.robot.commands.Swerve.AutoDistance;
 import frc.robot.subsystems.Conveyor;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -22,6 +23,7 @@ public class AutoAlignWithShoot extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new AutoAlign(ll, swerve),
+      new AutoDistance(swerve, ll),
       new ShootWhenReadyCommand(conveyor, shooter, swerve)
       );
   }
