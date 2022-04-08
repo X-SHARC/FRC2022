@@ -15,10 +15,13 @@ import frc.robot.subsystems.Swerve;
 
 public class AutoAlign extends CommandBase {
   /** Creates a new AutoAlign. */
-  PIDController rotController = new PIDController(0.0798, 0, 0.00274);
+  PIDController rotController = new PIDController(0.0758, 0, 0.00264);
   Timer timer = new Timer();
   Limelight LL;
   Swerve swerve;
+  boolean isFinished = false;
+  boolean temp = true;
+  double atSetpointTime = 0;
 
   public AutoAlign(Limelight LL, Swerve swerve) {
     this.LL = LL;
@@ -57,9 +60,15 @@ public class AutoAlign extends CommandBase {
   @Override
   public boolean isFinished() {
     if(rotController.atSetpoint()) {
-      timer.stop();
-      RobotContainer.state.setAlignmentState(AlignmentState.SUCCESS);
-      return true;
+      if(temp){
+        atSetpointTime = timer.get();
+        temp = false;
+      }
+      else if((timer.get()-atSetpointTime) >0.3){
+        timer.stop();
+        RobotContainer.state.setAlignmentState(AlignmentState.SUCCESS);
+        return true;
+      }
     }
     else if(timer.get() > 1.2) {
       RobotContainer.state.setAlignmentState(AlignmentState.TIMEOUT);
