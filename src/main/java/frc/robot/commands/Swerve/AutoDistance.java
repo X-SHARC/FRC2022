@@ -39,7 +39,7 @@ public class AutoDistance extends CommandBase {
     double distance = LL.getDistance();
     if(LL.getY() != 0.0) {
       RobotContainer.state.setDistanceState(DistanceState.ALIGNING);
-      swerve.drive(-distController.calculate(distance, 1.36), 0, 0, false);
+      swerve.drive(-distController.calculate(distance, 1.15), 0, 0, false);
     }
     else {
       RobotContainer.state.setDistanceState(DistanceState.FAIL);

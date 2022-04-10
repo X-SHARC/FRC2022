@@ -24,6 +24,7 @@ public class AutoAlignWithShoot extends SequentialCommandGroup {
     addCommands(
       new AutoAlign(ll, swerve),
       new AutoDistance(swerve, ll),
+      new AutoAlign(ll, swerve).withTimeout(0.4),
       new ShootWhenReadyCommand(conveyor, shooter, swerve)
       );
   }
