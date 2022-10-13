@@ -68,7 +68,8 @@ public class Swerve extends SubsystemBase {
   };
 
 
-  final boolean invertAllModules = false;
+  //! Invert?
+  final boolean invertAllModules = true;
   private SwerveModule[] modules = new SwerveModule[] {
     //-27 , -128, 54, -103
     new SwerveModule("FL", new TalonFX(17), new TalonFX(13), new DutyCycleEncoder( new DigitalInput(0)), Rotation2d.fromDegrees(154), false^invertAllModules, new PIDController(pidValues[0], 0, 0)), //! Front Left
@@ -148,7 +149,11 @@ public class Swerve extends SubsystemBase {
     // resetAllEncoders();
   }
 
+  //? Teleop angle +90 denenir mi???
+  //? Ya da axislerin yerini değiştirmek
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+    //?? yspeed
+    ySpeed *= -1;
     SwerveModuleState[] states =
     Constants.Swerve.kinematics.toSwerveModuleStates(
         fieldRelative

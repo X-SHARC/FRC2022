@@ -123,7 +123,7 @@ public class RobotContainer {
 
     Button shooterButton =
       new JoystickButton(operator, 3)
-      .whileHeld(new RunCommand(()->shooter.setRPM(2700), shooter))
+      .whileHeld(new RunCommand(()->shooter.setRPM(3000), shooter))
       .whenReleased(new RunCommand(()-> shooter.stop(), shooter));
 
     //normally operator

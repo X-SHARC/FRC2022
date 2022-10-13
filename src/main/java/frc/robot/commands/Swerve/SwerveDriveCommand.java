@@ -57,12 +57,12 @@ public class SwerveDriveCommand extends CommandBase {
       
 
     final var xSpeed = xSpeedLimiter.calculate(
-      (Math.abs(joystick.getLeftX()) < 0.1) ? 0 : joystick.getLeftY())
+      (Math.abs(joystick.getLeftX()) < 0.1) ? 0 : joystick.getLeftX())
       * Constants.Swerve.kMaxSpeed * scale;
 
     
     final var ySpeed = ySpeedLimiter.calculate(
-      (Math.abs(joystick.getLeftX()) <  0.1) ? 0 : joystick.getLeftX())
+      (Math.abs(joystick.getLeftY()) <  0.1) ? 0 : joystick.getLeftY())
       * Constants.Swerve.kMaxSpeed * scale;
      
     final var rot = rotLimiter.calculate(
