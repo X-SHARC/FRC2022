@@ -15,10 +15,10 @@ public class Conveyor extends SubsystemBase {
   }
 
   public void feedBall(){
-    conveyorMotor.set(ControlMode.PercentOutput, 0.7);
+    conveyorMotor.set(ControlMode.PercentOutput, 0.8);
   }
   public void retractBall(){
-    conveyorMotor.set(ControlMode.PercentOutput, -0.5);
+    conveyorMotor.set(ControlMode.PercentOutput, -0.6);
   }
   public void stop(){
     conveyorMotor.set(0.0);

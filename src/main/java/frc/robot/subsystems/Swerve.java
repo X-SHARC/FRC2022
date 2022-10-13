@@ -139,9 +139,9 @@ public class Swerve extends SubsystemBase {
     return odometry.getPoseMeters();
   }
 
-  public void resetOdometry(Pose2d pose) {
+  public void resetOdometry(Pose2d pose2d) {
     odometry.resetPosition(
-      pose, 
+      pose2d, 
       getGyro()
     );
     // resetAllEncoders();

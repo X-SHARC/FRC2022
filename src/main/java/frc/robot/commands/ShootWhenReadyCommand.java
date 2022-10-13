@@ -31,7 +31,8 @@ public class ShootWhenReadyCommand extends CommandBase {
   public ShootWhenReadyCommand(Conveyor conveyor, Shooter shooter, Swerve swerve) {
     SmartDashboard.putNumber("target shooter RPM", Constants.SHOOT_RPM);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(conveyor, shooter);
+    addRequirements(conveyor, shooter, sw);
+    this.sw = sw;
     this.conveyor = conveyor;
     this.shooter = shooter;
     this.swerve = swerve;
@@ -43,7 +44,6 @@ public class ShootWhenReadyCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  
     conveyor.stop();
     shooter.setRPM(rpm);
     this.rpm = 2800;
@@ -59,6 +59,7 @@ public class ShootWhenReadyCommand extends CommandBase {
     if (shooter.shooterPID.atSetpoint()) {
       iteration++;
       if(iteration>5){
+        //sw.setModuleStates(desiredStates);
         conveyor.feedBall();
       }
     } else {

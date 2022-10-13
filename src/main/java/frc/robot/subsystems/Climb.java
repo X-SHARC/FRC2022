@@ -13,6 +13,7 @@ import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
   /** Creates a new Climb. */
+
   WPI_TalonSRX climbMotor = new WPI_TalonSRX(Constants.CLIMB_ID);
 
   public Climb() {
@@ -21,10 +22,10 @@ public class Climb extends SubsystemBase {
   }
 
   public void climbUp(){
-    climbMotor.set(ControlMode.PercentOutput, 0.95);
+    climbMotor.set(ControlMode.PercentOutput, 1.0);
   }
   public void climbDown(){
-    climbMotor.set(ControlMode.PercentOutput, -0.95);
+    climbMotor.set(ControlMode.PercentOutput, -1.0);
   }
 
   public void stop(){

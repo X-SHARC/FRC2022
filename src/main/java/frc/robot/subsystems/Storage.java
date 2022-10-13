@@ -18,11 +18,11 @@ public class Storage extends SubsystemBase {
   }
 
   public void storageForward(){
-    storageMotor.set(ControlMode.PercentOutput, 0.7);
+    storageMotor.set(ControlMode.PercentOutput, 0.88);
   }
 
   public void storageBackwards(){
-    storageMotor.set(ControlMode.PercentOutput, -0.7);
+    storageMotor.set(ControlMode.PercentOutput, -0.88);
   }
 
   public void stop(){
