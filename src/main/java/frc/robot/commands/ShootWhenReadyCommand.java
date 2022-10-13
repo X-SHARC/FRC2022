@@ -31,8 +31,8 @@ public class ShootWhenReadyCommand extends CommandBase {
   public ShootWhenReadyCommand(Conveyor conveyor, Shooter shooter, Swerve swerve) {
     SmartDashboard.putNumber("target shooter RPM", Constants.SHOOT_RPM);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(conveyor, shooter, sw);
-    this.sw = sw;
+    addRequirements(conveyor, shooter, swerve);
+    this.swerve = swerve;
     this.conveyor = conveyor;
     this.shooter = shooter;
     this.swerve = swerve;
