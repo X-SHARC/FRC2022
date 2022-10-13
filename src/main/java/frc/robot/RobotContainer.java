@@ -34,6 +34,9 @@ import frc.robot.commands.ThePoPo;
 import frc.robot.commands.Swerve.AutoAlign;
 import frc.robot.commands.Swerve.AutoDistance;
 import frc.robot.commands.Swerve.SwerveAntiDefense;
+import frc.robot.commands.Auto.AutoFiveBalls;
+import frc.robot.commands.Auto.AutoThreeBalls;
+import frc.robot.commands.Swerve.SwerveCounterDefense;
 import frc.robot.commands.Swerve.SwerveDriveCommand;
 import frc.robot.commands.Swerve.SwerveSpin;
 import frc.robot.lib.drivers.WS2812Driver;
@@ -83,7 +86,7 @@ public class RobotContainer {
   AutoDistance autoDistance = new AutoDistance(swerveDrivetrain, limelight);
   SendableChooser<Command> autonomousChooser = new SendableChooser<>();
   SetLedState setLEDstate = new SetLedState(addressableLED);
-
+  
   public RobotContainer() {
     //camera.setExposureAuto();
     //camera.setWhiteBalanceAuto();
@@ -91,9 +94,10 @@ public class RobotContainer {
     //camera.setResolution(640, 480);
     configureButtonBindings();
     compressor.enableDigital();
-    //addressableLED.toggleRGB();
+
+  //addressableLED.toggleRGB();
     autonomousChooser.setDefaultOption("Do nothing", new PrintCommand("Doing nothing."));
-    autonomousChooser.addOption("Two balls", SharcTrajectory.getTwoBall(swerveDrivetrain, conveyor, shooter, intake, storage));
+    autonomousChooser.addOption("Two balls", SharcTrajectory.getTwoBall(swerveDrivetrain, conveyor, shooter, intake, storage, limelight));
     autonomousChooser.addOption("Three balls", SharcTrajectory.getThreeBall(swerveDrivetrain, conveyor, shooter, intake, storage));
     autonomousChooser.addOption("Five balls", SharcTrajectory.getFiveBall(swerveDrivetrain, conveyor, shooter, intake, storage));
     SmartDashboard.putData(autonomousChooser);
@@ -108,11 +112,13 @@ public class RobotContainer {
     climb.setDefaultCommand(climberCommand);
     conveyor.setDefaultCommand(conveyorCommand);
 
-    Button resetOdometryButton = new JoystickButton(driver, 7);
+
+    /*Button resetOdometryButton = new JoystickButton(driver, 7);
     resetOdometryButton.whenPressed(new InstantCommand(() -> {
       swerveDrivetrain.resetOdometry(new Pose2d());
       swerveDrivetrain.resetFieldOrientation();
-    }));
+    }));*/
+
 
 
 
@@ -180,15 +186,16 @@ public class RobotContainer {
     storageButton.whenReleased(new RunCommand(()->storage.stop(), storage));
 
 
-    Button autoAlignButton = new JoystickButton(driver, 3).whileHeld(autoAlign);
+    //Button autoAlignButton = new JoystickButton(driver, 3).whileHeld(autoAlign);
     
   }
 
 
   public Command getAutonomousCommand() {
 
-    //return SharcTrajectory.getFiveBall(swerveDrivetrain, conveyor, shooter, intake, storage);
-    return new RunCommand(()->swerveDrivetrain.drive(0.5, 0.5, 0, true)).withTimeout(1.3);
+    return SharcTrajectory.getTwoBall(swerveDrivetrain, conveyor, shooter, intake, storage, limelight);
+    //return new RunCommand(()->swerveDrivetrain.drive(0.5, 0.5, 0, true)).withTimeout(1.3);
+
   }
 }
 

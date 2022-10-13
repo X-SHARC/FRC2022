@@ -103,7 +103,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public double getGyroDouble(){
-    return Math.IEEEremainder(gyroAhrs.getAngle(), 360.0) * (Constants.kGyroReversed ? -1.0 : 1.0);
+    return Math.IEEEremainder(gyroAhrs.getAngle(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0);
   }
 
   SwerveDriveOdometry odometry = new SwerveDriveOdometry(
@@ -141,9 +141,9 @@ public class Swerve extends SubsystemBase {
     return odometry.getPoseMeters();
   }
 
-  public void resetOdometry(Pose2d pose) {
+  public void resetOdometry(Pose2d pose2d) {
     odometry.resetPosition(
-      pose, 
+      pose2d, 
       getGyro()
     );
     // resetAllEncoders();
@@ -203,8 +203,8 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("groAngle", getGyroDouble());
-    SmartDashboard.putNumber("field offset", fieldAngle.getDegrees());
+    SmartDashboard.putNumber("swerve groAngle", getGyroDouble());
+    SmartDashboard.putNumber("swerve field offset", fieldAngle.getDegrees());
     SmartDashboard.putNumber("bozukModuk", modules[2].getAngle().getDegrees());
 
     SmartDashboard.putNumber("bozukdegil", modules[3].getAngle().getDegrees());

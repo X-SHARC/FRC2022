@@ -19,9 +19,9 @@ public class SwerveDriveCommand extends CommandBase {
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   // TODO not using them currently, try out and see if you want to keep them for comp
-  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(6);
+  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(2.5);
+  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(2.5);
+  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(4.5);
 
   double scale = 1;
   double scale2= 0.5;
@@ -44,7 +44,7 @@ public class SwerveDriveCommand extends CommandBase {
   public void execute() {
     scale = Math.abs(joystick.getRightTriggerAxis()) < 0.4 ? 1: scale2;
     //scale = Math.abs(joystick.getRightTriggerAxis()) > 0.4 ? 0.8 : scale2;
-
+    //132 ve 15
     if(scale == scale2){
       joystick.setRumble(RumbleType.kRightRumble, 0.55);
       joystick.setRumble(RumbleType.kLeftRumble, 0.55);
@@ -72,7 +72,7 @@ public class SwerveDriveCommand extends CommandBase {
 
     //double[] speeds ={xSpeed, ySpeed, rot}; 
     //SmartDashboard.putNumberArray("controller speeds", speeds);
-    swerveSubsystem.drive(xSpeed, ySpeed, rot, fieldOriented);
+    swerveSubsystem.drive(xSpeed, ySpeed, rot, true);
 
   }
   // Called once the command ends or is interrupted.
