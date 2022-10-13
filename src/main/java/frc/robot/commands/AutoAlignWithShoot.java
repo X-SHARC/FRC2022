@@ -22,9 +22,7 @@ public class AutoAlignWithShoot extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new AutoAlign(ll, swerve),
-      new AutoDistance(swerve, ll),
-      new AutoAlign(ll, swerve).withTimeout(0.4),
+      new AutoAlign(ll, swerve).withTimeout(0.5),
       new ShootWhenReadyCommand(conveyor, shooter, swerve)
       );
   }

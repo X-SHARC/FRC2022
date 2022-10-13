@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -13,15 +15,10 @@ import frc.robot.lib.vision.VisionTarget;
 
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
-  private NetworkTable table;
 
-  private NetworkTableEntry tx;
-  private NetworkTableEntry ty;
-  private NetworkTableEntry ta;
-
-  protected double x = 0;
-  protected double y = 0;
-  protected double area = 0;
+  protected double x = Double.NaN;
+  protected double y = Double.NaN;
+  protected PhotonCamera camera;
 
   //create an enum named mode consisting of the following values: processing, off, on and blinking. All names must be capital
   public enum mode {
@@ -31,10 +28,8 @@ public class Limelight extends SubsystemBase {
   VisionTarget target = new VisionTarget(2.64, 1.05, 58.8);
 
   public Limelight() {
-    table = NetworkTableInstance.getDefault().getTable("limelight");
-    tx = table.getEntry("tx");
-    ty = table.getEntry("ty");
-    ta = table.getEntry("ta");
+     camera = new PhotonCamera("photonvision");
+ 
   }
 
   public double getDistance(){
@@ -50,12 +45,8 @@ public class Limelight extends SubsystemBase {
     return y;
   }
 
-  public double getArea() {
-    return area;
-  }
-
   //write setter for camera mode of limelight
-
+/*
   public void setCamMode(mode mode) {
     // 0 for vision processing
     // 1 force off
@@ -77,21 +68,20 @@ public class Limelight extends SubsystemBase {
         break;
     }
   }
-
+*/
 
 
   @Override
   public void periodic() {
+    var result = camera.getLatestResult().getBestTarget();
     // read values periodically
-    x = tx.getDouble(0.0);
-    y = ty.getDouble(0.0);
+    x = result.getYaw();
+    y = result.getPitch();
     target.update(x, y);
-    area = ta.getDouble(0.0);
 
     // post to smart dashboard periodically
     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", area);
     SmartDashboard.putNumber("Limelight Distance", getDistance());
     SmartDashboard.putNumber("angle", 
       Math.toDegrees(

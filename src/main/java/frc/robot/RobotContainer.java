@@ -155,7 +155,6 @@ public class RobotContainer {
       .whileHeld(new RunCommand(()-> intake.runBackwards(), intake))
       .whenReleased(new RunCommand(()-> intake.stop(), intake));
 
-
       Button[] intakeExtensionButtons = {
         new JoystickButton(operator, 10),
         new JoystickButton(operator, 9)
