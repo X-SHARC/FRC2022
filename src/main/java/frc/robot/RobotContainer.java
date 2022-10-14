@@ -123,7 +123,7 @@ public class RobotContainer {
 
     Button shooterButton =
       new JoystickButton(operator, 3)
-      .whileHeld(new RunCommand(()->shooter.setRPM(2700), shooter))
+      .whileHeld(new RunCommand(()->shooter.setRPM(2800), shooter))
       .whenReleased(new RunCommand(()-> shooter.stop(), shooter));
 
     //normally operator
@@ -177,6 +177,9 @@ public class RobotContainer {
 
     Button storageButton = new JoystickButton(operator, 2).whileHeld(new RunCommand(()->storage.storageBackwards(), storage));
     storageButton.whenReleased(new RunCommand(()->storage.stop(), storage));
+
+    JoystickButton feedBall = new JoystickButton(operator,1);
+    feedBall.whileHeld(conveyorCommand);
 
 
     //Button autoAlignButton = new JoystickButton(driver, 3).whileHeld(autoAlign);

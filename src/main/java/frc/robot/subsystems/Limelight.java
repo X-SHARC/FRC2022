@@ -16,9 +16,9 @@ import frc.robot.lib.vision.VisionTarget;
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
 
-  protected double x = Double.NaN;
-  protected double y = Double.NaN;
-  protected PhotonCamera camera;
+  protected double x = 0;
+  protected double y = 0;
+  protected PhotonCamera camera  = new PhotonCamera("Microsoft_LifeCam_HD-3000");;
 
   //create an enum named mode consisting of the following values: processing, off, on and blinking. All names must be capital
   public enum mode {
@@ -28,7 +28,6 @@ public class Limelight extends SubsystemBase {
   VisionTarget target = new VisionTarget(2.64, 1.05, 58.8);
 
   public Limelight() {
-     camera = new PhotonCamera("photonvision");
  
   }
 
@@ -73,11 +72,15 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    var result = camera.getLatestResult().getBestTarget();
+    var result = camera.getLatestResult();
     // read values periodically
-    x = result.getYaw();
-    y = result.getPitch();
-    target.update(x, y);
+    if(result.hasTargets()){
+      var PVtarget = result.getBestTarget();
+      x = PVtarget.getYaw();
+      y = PVtarget.getPitch();
+      target.update(x, y);
+    }
+    
 
     // post to smart dashboard periodically
     SmartDashboard.putNumber("LimelightX", x);
