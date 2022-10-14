@@ -16,10 +16,9 @@ public class StorageCommand extends CommandBase {
   Storage storage;
   Conveyor conveyor;
   Intake intake;
-  public StorageCommand(Storage storage, Conveyor conveyor, Intake intake) {
+  public StorageCommand(Storage storage, Conveyor conveyor) {
     this.storage = storage;
     this.conveyor = conveyor;
-    this.intake = intake;
     addRequirements(storage, conveyor);
   }
 
@@ -30,6 +29,8 @@ public class StorageCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    conveyor.feedBall();
+    storage.storageForward();
   }
 
   // Called once the command ends or is interrupted.

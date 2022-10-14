@@ -30,6 +30,7 @@ import frc.robot.commands.PlayMusic;
 import frc.robot.commands.RGBCommand;
 import frc.robot.commands.SetLedState;
 import frc.robot.commands.ShootWhenReadyCommand;
+import frc.robot.commands.StorageCommand;
 import frc.robot.commands.ThePoPo;
 import frc.robot.commands.Swerve.AutoAlign;
 import frc.robot.commands.Swerve.AutoDistance;
@@ -83,6 +84,7 @@ public class RobotContainer {
   AutoDistance autoDistance = new AutoDistance(swerveDrivetrain, limelight);
   SendableChooser<Command> autonomousChooser = new SendableChooser<>();
   SetLedState setLEDstate = new SetLedState(addressableLED);
+  StorageCommand storageCommand = new StorageCommand(storage, conveyor);
 
   public RobotContainer() {
     //camera.setExposureAuto();
@@ -179,7 +181,10 @@ public class RobotContainer {
     storageButton.whenReleased(new RunCommand(()->storage.stop(), storage));
 
     JoystickButton feedBall = new JoystickButton(operator,1);
-    feedBall.whileHeld(conveyorCommand);
+    feedBall.whileHeld(storageCommand);
+
+    JoystickButton gyroResetButton = new JoystickButton(driver, 8);
+    gyroResetButton.whenPressed(new RunCommand(()->swerveDrivetrain.manualGyroReset()));
 
 
     //Button autoAlignButton = new JoystickButton(driver, 3).whileHeld(autoAlign);

@@ -176,6 +176,12 @@ public class Swerve extends SubsystemBase {
     this.teleopAngle = getGyro();
   }
 
+  public void manualGyroReset(){
+    this.teleopAngle = new Rotation2d(0);
+    this.fieldAngle = new Rotation2d(0);
+    gyroAhrs.reset();
+  }
+
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
         desiredStates, Constants.Swerve.kMaxSpeed);

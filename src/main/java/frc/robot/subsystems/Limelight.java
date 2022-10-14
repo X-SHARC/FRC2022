@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import org.photonvision.PhotonCamera;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -16,9 +14,14 @@ import frc.robot.lib.vision.VisionTarget;
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
 
+  private NetworkTable table;
+
+  private NetworkTableEntry tx;
+  private NetworkTableEntry ty;
+  
   protected double x = 0;
   protected double y = 0;
-  protected PhotonCamera camera  = new PhotonCamera("Microsoft_LifeCam_HD-3000");;
+  //protected PhotonCamera camera  = new PhotonCamera("Microsoft_LifeCam_HD-3000");;
 
   //create an enum named mode consisting of the following values: processing, off, on and blinking. All names must be capital
   public enum mode {
@@ -28,7 +31,9 @@ public class Limelight extends SubsystemBase {
   VisionTarget target = new VisionTarget(2.64, 1.05, 58.8);
 
   public Limelight() {
- 
+    table = NetworkTableInstance.getDefault().getTable("photonvision").getSubTable("Microsoft_LifeCam_HD-3000");
+    tx = table.getEntry("targetYaw");
+    ty = table.getEntry("targetPitch");
   }
 
   public double getDistance(){
@@ -72,14 +77,11 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    var result = camera.getLatestResult();
-    // read values periodically
-    if(result.hasTargets()){
-      var PVtarget = result.getBestTarget();
-      x = PVtarget.getYaw();
-      y = PVtarget.getPitch();
-      target.update(x, y);
-    }
+
+    x = tx.getDouble(0.0);
+    y = ty.getDouble(0.0);
+    target.update(x, y);
+    
     
 
     // post to smart dashboard periodically

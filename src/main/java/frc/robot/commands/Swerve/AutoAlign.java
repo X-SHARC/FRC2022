@@ -15,7 +15,7 @@ import frc.robot.subsystems.Swerve;
 
 public class AutoAlign extends CommandBase {
   /** Creates a new AutoAlign. */
-  PIDController rotController = new PIDController(0.0708, 0, 0.002084);
+  PIDController rotController = new PIDController(0.06980, 0, 0.002084);
   Timer timer = new Timer();
   Limelight LL;
   Swerve swerve;
