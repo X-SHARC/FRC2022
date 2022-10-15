@@ -194,7 +194,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
 
-    return SharcTrajectory.getTwoBall(swerveDrivetrain, conveyor, shooter, intake, storage, limelight);
+    return SharcTrajectory.getFiveBallWithAuto(swerveDrivetrain, conveyor, shooter, intake, storage,limelight);
     //return new RunCommand(()->swerveDrivetrain.drive(0.5, 0.5, 0, true)).withTimeout(1.3);
   }
 }

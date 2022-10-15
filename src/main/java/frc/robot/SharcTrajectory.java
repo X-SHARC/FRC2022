@@ -153,6 +153,55 @@ public class SharcTrajectory {
 
     }
 
+    public static Command getFiveBallWithAuto(Swerve swerve, Conveyor conveyor, Shooter shooter, Intake intake, Storage storage, Limelight limelight) {
+        PIDController x_pid = new PIDController(x_kp, 0, 0);
+        PIDController y_pid = new PIDController(y_kp, 0, 0);
+        
+        ProfiledPIDController thetaController = new ProfiledPIDController(Math.PI, 0, 0, Constants.Swerve.kThetaControllerConstraints);
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        //thetaController.disableContinuousInput();
+        thetaController.reset(swerve.getPose().getRotation().getRadians());
+
+        Trajectory[] trajectories = {
+            PathPlanner.loadPath("three1", 6, 4.5, false),
+            PathPlanner.loadPath("three2", 6, 4.5, false),
+            PathPlanner.loadPath("three3", 6, 4.5, false),
+            PathPlanner.loadPath("threeplustwo1", 6, 4.5, false),
+            PathPlanner.loadPath("threeplustwo2", 6, 4.5, false)
+        };
+        
+        var initialPose = trajectories[0].getInitialPose();
+        swerve.resetOdometry(new Pose2d(initialPose.getTranslation(), ((PathPlannerState) trajectories[0].getStates().get(0)).holonomicRotation));
+        swerve.resetFieldOrientation(trajectories[0].getInitialPose().getRotation());
+        
+        SmartDashboard.putData("theta", thetaController);
+        SmartDashboard.putData("x", x_pid);
+        SmartDashboard.putData("y", y_pid);
+
+        CommandGroupBase commands = 
+            (
+                new ShootWhenReadyCommand(conveyor, shooter,swerve).withTimeout(.8) //Old value 0.85
+                .andThen(() -> intake.extendIntake())
+                .andThen(getControllerCommand(trajectories[0], swerve, x_pid, y_pid, thetaController))
+                .andThen(getControllerCommand(trajectories[1], swerve, x_pid, y_pid, thetaController))
+                .andThen(getControllerCommand(trajectories[2], swerve, x_pid, y_pid, thetaController))
+                .andThen(() -> swerve.stopModules())
+                .andThen((new ShootWhenReadyCommand(conveyor, shooter,swerve)).withTimeout(1.55))
+                .andThen(getControllerCommand(trajectories[3], swerve, x_pid, y_pid, thetaController))
+                .andThen(() -> swerve.stopModules())
+                .andThen(new RunCommand(() -> {}).withTimeout(.4))
+                .andThen(getControllerCommand(trajectories[4], swerve, x_pid, y_pid, thetaController))
+                .andThen(() -> swerve.stopModules())
+                .andThen(new AutoAlign(limelight, swerve))
+                .andThen((new ShootWhenReadyCommand(conveyor, shooter,swerve)).withTimeout(1.5))
+            )
+            .raceWith(new CollectCargoCommand(intake, storage))
+        ;
+        return commands;
+
+
+    }
+
     public static Command getThreeBall(Swerve swerve, Conveyor conveyor, Shooter shooter, Intake intake, Storage storage) {
         PIDController x_pid = new PIDController(x_kp, 0, 0);
         PIDController y_pid = new PIDController(y_kp, 0, 0);
