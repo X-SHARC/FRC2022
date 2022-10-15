@@ -163,12 +163,13 @@ public class SharcTrajectory {
         //thetaController.disableContinuousInput();
         thetaController.reset(swerve.getPose().getRotation().getRadians());
 
+        double kMaxTrajectoryVelocity = 7.0;
         Trajectory[] trajectories = {
-            PathPlanner.loadPath("three1", 6, 4.5, false),
-            PathPlanner.loadPath("three2", 6, 4.5, false),
-            PathPlanner.loadPath("three3", 6, 4.5, false),
-            PathPlanner.loadPath("threeplustwo1", 6, 4.5, false),
-            PathPlanner.loadPath("threeplustwo2", 6, 4.5, false)
+            PathPlanner.loadPath("three1", kMaxTrajectoryVelocity, 4.5, false),
+            PathPlanner.loadPath("three2", kMaxTrajectoryVelocity, 4.5, false),
+            PathPlanner.loadPath("three3", kMaxTrajectoryVelocity, 4.5, false),
+            PathPlanner.loadPath("threeplustwo1", kMaxTrajectoryVelocity, 4.5, false),
+            PathPlanner.loadPath("threeplustwo2", kMaxTrajectoryVelocity, 4.5, false)
         };
         
         var initialPose = trajectories[0].getInitialPose();
@@ -193,7 +194,7 @@ public class SharcTrajectory {
                 .andThen(new RunCommand(() -> {}).withTimeout(.4))
                 .andThen(getControllerCommand(trajectories[4], swerve, x_pid, y_pid, thetaController))
                 .andThen(() -> swerve.stopModules())
-                .andThen(new AutoAlign(limelight, swerve))
+                .andThen(new AutoAlign(limelight, swerve).withTimeout(.7))
                 .andThen((new ShootWhenReadyCommand(conveyor, shooter,swerve)).withTimeout(1.5))
             )
             .raceWith(new CollectCargoCommand(intake, storage))
