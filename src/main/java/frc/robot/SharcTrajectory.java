@@ -109,13 +109,14 @@ public class SharcTrajectory {
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
         //thetaController.disableContinuousInput();
         thetaController.reset(swerve.getPose().getRotation().getRadians());
-
+        
+        double kMaxTrajectoryVelocity = 7.0;
         Trajectory[] trajectories = {
-            PathPlanner.loadPath("three1", 6, 4.5, false),
-            PathPlanner.loadPath("three2", 6, 4.5, false),
-            PathPlanner.loadPath("three3", 6, 4.5, false),
-            PathPlanner.loadPath("threeplustwo1", 6, 4.5, false),
-            PathPlanner.loadPath("threeplustwo2", 6, 4.5, false)
+            PathPlanner.loadPath("three1", kMaxTrajectoryVelocity, 4.5, false),
+            PathPlanner.loadPath("three2", kMaxTrajectoryVelocity, 4.5, false),
+            PathPlanner.loadPath("three3", kMaxTrajectoryVelocity, 4.5, false),
+            PathPlanner.loadPath("threeplustwo1", kMaxTrajectoryVelocity, 4.5, false),
+            PathPlanner.loadPath("threeplustwo2", kMaxTrajectoryVelocity, 4.5, false)
         };
         
         for (int i = 0; i < trajectories.length; i++) {
